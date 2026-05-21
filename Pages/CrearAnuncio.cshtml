@@ -16,6 +16,7 @@
                 <select asp-for="Input.Transaction" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" asp-items="Html.GetEnumSelectList<EncuentraTuHogar.Domain.ValueObjects.TransactionType>()">
                     <option value="">Seleccione</option>
                 </select>
+                <span asp-validation-for="Input.Transaction" class="text-danger" style="color: var(--error-color); font-size: 0.85rem;"></span>
             </div>
             
             <div class="form-group">
@@ -23,6 +24,7 @@
                 <select asp-for="Input.Type" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" asp-items="Html.GetEnumSelectList<EncuentraTuHogar.Domain.ValueObjects.PropertyType>()">
                     <option value="">Seleccione</option>
                 </select>
+                <span asp-validation-for="Input.Type" class="text-danger" style="color: var(--error-color); font-size: 0.85rem;"></span>
             </div>
         </div>
 
@@ -30,29 +32,38 @@
             <div class="form-group">
                 <label asp-for="Input.City" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
                 <input asp-for="Input.City" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" />
+                <span asp-validation-for="Input.City" class="text-danger" style="color: var(--error-color); font-size: 0.85rem;"></span>
             </div>
             
             <div class="form-group">
                 <label asp-for="Input.Zone" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
                 <input asp-for="Input.Zone" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" />
+                <span asp-validation-for="Input.Zone" class="text-danger" style="color: var(--error-color); font-size: 0.85rem;"></span>
             </div>
         </div>
 
         <div class="form-group" style="margin-bottom: 1rem;">
             <label asp-for="Input.Street" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
             <input asp-for="Input.Street" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" />
+            <span asp-validation-for="Input.Street" class="text-danger" style="color: var(--error-color); font-size: 0.85rem;"></span>
         </div>
 
         <div class="form-group" style="margin-bottom: 1rem;">
             <label asp-for="Input.Price" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
             <input asp-for="Input.Price" type="number" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" />
+            <span asp-validation-for="Input.Price" class="text-danger" style="color: var(--error-color); font-size: 0.85rem;"></span>
         </div>
 
         <div class="form-group" style="margin-bottom: 2rem;">
             <label asp-for="Input.Description" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
             <textarea asp-for="Input.Description" rows="4" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;"></textarea>
+            <span asp-validation-for="Input.Description" class="text-danger" style="color: var(--error-color); font-size: 0.85rem;"></span>
         </div>
 
         <button type="submit" class="btn-primary" style="width: 100%;">Publicar Propiedad</button>
     </form>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
