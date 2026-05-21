@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using EncuentraTuHogar.Application.Interfaces;
-using EncuentraTuHogar.Domain.Entities;
-using EncuentraTuHogar.Infrastructure.Identity;
+using EncuentraTuHogar.Frontend.Services;
+using EncuentraTuHogar.Application.DTOs;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
@@ -14,13 +12,11 @@ namespace EncuentraTuHogar.Pages;
 [Authorize]
 public class AgendarVisitaModel : PageModel
 {
-    private readonly IVisitRepository _visitRepository;
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly ApiClient _apiClient;
 
-    public AgendarVisitaModel(IVisitRepository visitRepository, UserManager<ApplicationUser> userManager)
+    public AgendarVisitaModel(ApiClient apiClient)
     {
-        _visitRepository = visitRepository;
-        _userManager = userManager;
+        _apiClient = apiClient;
     }
 
     [BindProperty]
@@ -49,9 +45,6 @@ public class AgendarVisitaModel : PageModel
         if (!ModelState.IsValid)
             return Page();
 
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null) return Challenge();
-
         if (Input.ScheduledDate < DateTime.Now)
         {
             ModelState.AddModelError("Input.ScheduledDate", "La fecha debe ser en el futuro.");
@@ -64,8 +57,14 @@ public class AgendarVisitaModel : PageModel
              propId = Guid.NewGuid(); // Fake ID just to show it works
         }
 
-        var visit = Visit.Create(propId, user.Id, Input.ScheduledDate);
-        await _visitRepository.AddAsync(visit);
+        var request = new ScheduleVisitRequest(propId, Input.ScheduledDate);
+        var visit = await _apiClient.CreateVisitAsync(request);
+
+        if (visit == null)
+        {
+            ModelState.AddModelError(string.Empty, "Error al agendar la visita. Intente nuevamente.");
+            return Page();
+        }
 
         return RedirectToPage("/Dashboard");
     }

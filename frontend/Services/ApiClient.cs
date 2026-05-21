@@ -54,13 +54,21 @@ public class ApiClient
     }
 
     // -- Properties --
-    public async Task<List<PropertyDto>> GetPropertiesAsync(string? city = null)
+    public async Task<List<PropertyDto>> GetPropertiesAsync(PropertyFilterRequest filter)
     {
         await SetAuthorizationHeaderAsync();
         var url = "/api/properties";
-        if (!string.IsNullOrEmpty(city))
+        var queryParams = new List<string>();
+
+        if (!string.IsNullOrEmpty(filter.City)) queryParams.Add($"city={Uri.EscapeDataString(filter.City)}");
+        if (!string.IsNullOrEmpty(filter.Type)) queryParams.Add($"type={Uri.EscapeDataString(filter.Type)}");
+        if (!string.IsNullOrEmpty(filter.Transaction)) queryParams.Add($"transaction={Uri.EscapeDataString(filter.Transaction)}");
+        if (filter.MinPrice.HasValue) queryParams.Add($"minPrice={filter.MinPrice}");
+        if (filter.MaxPrice.HasValue) queryParams.Add($"maxPrice={filter.MaxPrice}");
+
+        if (queryParams.Any())
         {
-            url += $"?city={Uri.EscapeDataString(city)}";
+            url += "?" + string.Join("&", queryParams);
         }
 
         var response = await _httpClient.GetAsync(url);
@@ -97,6 +105,18 @@ public class ApiClient
         if (response.IsSuccessStatusCode)
         {
             return await response.Content.ReadFromJsonAsync<PropertyDto>();
+        }
+        return null;
+    }
+
+    // -- Visits --
+    public async Task<VisitDto?> CreateVisitAsync(ScheduleVisitRequest request)
+    {
+        await SetAuthorizationHeaderAsync();
+        var response = await _httpClient.PostAsJsonAsync("/api/visits", request);
+        if (response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadFromJsonAsync<VisitDto>();
         }
         return null;
     }
