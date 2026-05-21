@@ -109,8 +109,11 @@
     }
     else
     {
-        <div style="text-align: center; padding: 2rem;">
-            <p>No se encontraron propiedades con esos filtros.</p>
+        <div style="background: var(--light-bg); border-radius: 12px; padding: 4rem 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; max-width: 600px; margin: 0 auto;">
+            <div style="font-size: 4rem; margin-bottom: 1.5rem; opacity: 0.5;">🔍</div>
+            <h3 style="color: var(--primary-color); margin-bottom: 1rem;">No encontramos propiedades</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">No hay propiedades que coincidan con tu búsqueda actualmente. Intenta cambiar los filtros o vuelve más tarde.</p>
+            <a href="/" class="btn-primary" style="text-decoration: none;">Limpiar Filtros</a>
         </div>
     }
 </section>
