@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using EncuentraTuHogar.Application.DTOs;
 using EncuentraTuHogar.Application.Interfaces;
 using EncuentraTuHogar.Application.UseCases;
@@ -24,10 +25,19 @@ builder.Services.AddHybridAuthentication(builder.Configuration);
 
 // ── Frontend API Client ───────────────────────────────────────────────────────
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddHttpClient<EncuentraTuHogar.Frontend.Services.ApiClient>(client =>
+builder.Services.AddHttpClient<EncuentraTuHogar.Frontend.Services.ApiClient>((serviceProvider, client) =>
 {
-    // Using current localhost standard ports. Adjust if deployed.
-    client.BaseAddress = new Uri("http://localhost:5035");
+    var httpContextAccessor = serviceProvider.GetRequiredService<IHttpContextAccessor>();
+    var request = httpContextAccessor.HttpContext?.Request;
+    if (request != null)
+    {
+        client.BaseAddress = new Uri($"{request.Scheme}://{request.Host}");
+    }
+    else
+    {
+        // Fallback for background services or startup
+        client.BaseAddress = new Uri(builder.Configuration["BaseUrl"] ?? "http://localhost:5035");
+    }
 });
 
 // ── CORS ──────────────────────────────────────────────────────────────────────
@@ -61,6 +71,13 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
+}
+
+// ── Ejecutar Migraciones Automáticamente (Importante para SQLite en Render) ───
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<EncuentraTuHogar.Infrastructure.Persistence.AppDbContext>();
+    dbContext.Database.Migrate();
 }
 
 app.UseHttpsRedirection();
