@@ -7,7 +7,14 @@ COPY ["EncuentraTuHogar.csproj", "./"]
 RUN dotnet restore "EncuentraTuHogar.csproj"
 
 # Copy everything else and build
-COPY . .
+COPY Pages/ Pages/
+COPY Properties/ Properties/
+COPY backend/ backend/
+COPY frontend/ frontend/
+COPY wwwroot/ wwwroot/
+COPY GlobalUsings.cs .
+COPY Program.cs .
+COPY appsettings*.json ./
 RUN dotnet build "EncuentraTuHogar.csproj" -c Release -o /app/build
 
 # Publish Stage
