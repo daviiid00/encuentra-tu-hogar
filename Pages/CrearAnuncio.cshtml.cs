@@ -38,11 +38,11 @@ public class CrearAnuncioModel : PageModel
 
         [Required]
         [Display(Name = "Tipo de Propiedad")]
-        public string Type { get; set; } // Modificado a string para facilitar UI binding
+        public EncuentraTuHogar.Domain.ValueObjects.PropertyType Type { get; set; }
 
         [Required]
         [Display(Name = "Tipo de Transacción")]
-        public string Transaction { get; set; } // Modificado a string para UI binding
+        public EncuentraTuHogar.Domain.ValueObjects.TransactionType Transaction { get; set; }
 
         [Required]
         [Display(Name = "Precio ($)")]
@@ -69,10 +69,10 @@ public class CrearAnuncioModel : PageModel
             Input.City,
             Input.Zone,
             Input.Street,
+            "00000",
             Input.Price,
-            "COP",
-            Input.Type,
-            Input.Transaction,
+            Input.Type.ToString(),
+            Input.Transaction.ToString(),
             3,
             null,
             null,
