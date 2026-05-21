@@ -1,4 +1,5 @@
 @page
+@using EncuentraTuHogar.Frontend.Helpers
 @model EncuentraTuHogar.Pages.DashboardModel
 @{
     ViewData["Title"] = "Mi Perfil";
@@ -39,8 +40,8 @@
                     {
                         <div style="border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; background: white;">
                             <h4 style="margin-top: 0;">@prop.City, @prop.Neighborhood</h4>
-                            <p><strong>Tipo:</strong> @prop.Type <br/>
-                            <strong>Transacción:</strong> @prop.Transaction <br/>
+                            <p><strong>Tipo:</strong> @TranslationHelper.TranslatePropertyType(prop.Type) <br/>
+                            <strong>Transacción:</strong> @TranslationHelper.TranslateTransactionType(prop.Transaction) <br/>
                             <strong>Precio:</strong> $@prop.Price</p>
                         </div>
                     }

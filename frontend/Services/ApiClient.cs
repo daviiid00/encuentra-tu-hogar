@@ -98,15 +98,18 @@ public class ApiClient
         return new List<PropertyDto>();
     }
 
-    public async Task<PropertyDto?> CreatePropertyAsync(CreatePropertyRequest request)
+    public async Task<(PropertyDto? Property, string? Error)> CreatePropertyAsync(CreatePropertyRequest request)
     {
         await SetAuthorizationHeaderAsync();
         var response = await _httpClient.PostAsJsonAsync("/api/properties", request);
         if (response.IsSuccessStatusCode)
         {
-            return await response.Content.ReadFromJsonAsync<PropertyDto>();
+            var property = await response.Content.ReadFromJsonAsync<PropertyDto>();
+            return (property, null);
         }
-        return null;
+        
+        var errorContent = await response.Content.ReadAsStringAsync();
+        return (null, errorContent);
     }
 
     // -- Visits --

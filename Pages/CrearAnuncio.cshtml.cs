@@ -80,15 +80,29 @@ public class CrearAnuncioModel : PageModel
             new List<string>()
         );
 
-        var propertyDto = await _apiClient.CreatePropertyAsync(request);
+        var result = await _apiClient.CreatePropertyAsync(request);
 
-        if (propertyDto != null)
+        if (result.Property != null)
         {
             return RedirectToPage("/Dashboard");
         }
         else
         {
-            ModelState.AddModelError(string.Empty, "Hubo un error al crear la propiedad. Verifica que eres propietario y tienes sesión válida.");
+            // Parse error if possible, or show generic
+            string errorMsg = "Hubo un error al crear la propiedad. Verifica que eres propietario y tienes sesión válida.";
+            if (!string.IsNullOrEmpty(result.Error))
+            {
+                // result.Error might be a JSON like {"error": "..."}
+                try {
+                    using var doc = System.Text.Json.JsonDocument.Parse(result.Error);
+                    if (doc.RootElement.TryGetProperty("error", out var errElement)) {
+                        errorMsg = errElement.GetString() ?? errorMsg;
+                    }
+                } catch { 
+                    // Not valid JSON, ignore
+                }
+            }
+            ModelState.AddModelError(string.Empty, errorMsg);
             return Page();
         }
     }
