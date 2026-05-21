@@ -49,7 +49,7 @@ public class SearchPropertiesUseCase : IUseCase<SearchPropertiesRequest, IEnumer
                 .Where(p => p.Status == VerificationStatus.Verified)
                 .OrderByDescending(p => p.IsLocalPriority)
                 .ThenByDescending(p => p.Views)
-                .Select(PropertyMapper.ToDto)
+                .Select(p => PropertyMapper.ToDto(p))
                 .ToList();
                 
             return Result.Success<IEnumerable<PropertyDto>>(results);

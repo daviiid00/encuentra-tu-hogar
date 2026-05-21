@@ -17,6 +17,11 @@ public class VisitRepository : IVisitRepository
         _context = context;
     }
 
+    public async Task<Visit?> GetByIdAsync(Guid id)
+    {
+        return await _context.Visits.FirstOrDefaultAsync(v => v.Id == id);
+    }
+
     public async Task<IEnumerable<Visit>> FindByPropertyIdAsync(Guid propertyId)
     {
         return await _context.Visits.Where(v => v.PropertyId == propertyId).ToListAsync();

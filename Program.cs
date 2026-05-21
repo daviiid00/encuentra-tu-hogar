@@ -1,56 +1,81 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using EncuentraTuHogar.Infrastructure.Persistence;
-using EncuentraTuHogar.Infrastructure.Identity;
+using EncuentraTuHogar.Application.DTOs;
 using EncuentraTuHogar.Application.Interfaces;
 using EncuentraTuHogar.Application.UseCases;
-using EncuentraTuHogar.Application.DTOs;
-using System.Collections.Generic;
+using EncuentraTuHogar.API.Middleware;
+using EncuentraTuHogar.Infrastructure.Extensions;
 using EncuentraTuHogar.Infrastructure.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// ── Razor Pages (frontend existente — sin modificar) ──────────────────────────
 builder.Services.AddRazorPages();
 
-// DbContext
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=EncuentraTuHogar.db"));
+// ── Controladores REST API ────────────────────────────────────────────────────
+builder.Services.AddControllers();
 
-// Identity
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
+// ── Base de datos (SQLite — preparado para migrar a PostgreSQL) ───────────────
+builder.Services.AddDatabase(builder.Configuration);
 
-// Repositories
-builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
-builder.Services.AddScoped<IVisitRepository, VisitRepository>();
+// ── Identity + Roles ──────────────────────────────────────────────────────────
+builder.Services.AddIdentityServices();
 
-// UseCases
-builder.Services.AddScoped<IUseCase<SearchPropertiesRequest, IEnumerable<PropertyDto>>, SearchPropertiesUseCase>();
+// ── Authentication (JWT + Cookies) ────────────────────────────────────────────
+builder.Services.AddHybridAuthentication(builder.Configuration);
 
-// SignalR
+// ── Frontend API Client ───────────────────────────────────────────────────────
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient<EncuentraTuHogar.Frontend.Services.ApiClient>(client =>
+{
+    // Using current localhost standard ports. Adjust if deployed.
+    client.BaseAddress = new Uri("http://localhost:5035");
+});
+
+// ── CORS ──────────────────────────────────────────────────────────────────────
+builder.Services.AddCorsPolicy(builder.Configuration);
+
+// ── Repositories ──────────────────────────────────────────────────────────────
+builder.Services.AddRepositories();
+
+// ── Application Services ──────────────────────────────────────────────────────
+builder.Services.AddApplicationServices();
+
+// ── Use Cases (legacy — se mantienen para compatibilidad) ─────────────────────
+builder.Services.AddScoped<
+    IUseCase<SearchPropertiesRequest, IEnumerable<PropertyDto>>,
+    SearchPropertiesUseCase>();
+
+// ── SignalR (hub de chat — sin WebSockets todavía) ────────────────────────────
 builder.Services.AddSignalR();
+
+// ── API Explorer (preparado para Swagger futuro) ──────────────────────────────
+builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// ── Pipeline HTTP ─────────────────────────────────────────────────────────────
+
+// Middleware global de errores (antes de todo)
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+app.UseCors("DefaultCors");
 
 app.UseRouting();
 
+// Autenticación ANTES de autorización (orden obligatorio)
 app.UseAuthentication();
 app.UseAuthorization();
 
+// ── Endpoints ─────────────────────────────────────────────────────────────────
 app.MapStaticAssets();
-app.MapRazorPages().WithStaticAssets();
-app.MapHub<CommunityChatHub>("/communityChatHub");
+app.MapRazorPages().WithStaticAssets();              // Razor Pages (UI sin modificar)
+app.MapControllers();                                 // REST API controllers
+app.MapHub<CommunityChatHub>("/communityChatHub");   // SignalR (futuro)
 
 app.Run();

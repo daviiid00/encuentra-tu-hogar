@@ -1,24 +1,40 @@
 using EncuentraTuHogar.Domain.Entities;
 using EncuentraTuHogar.Application.DTOs;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace EncuentraTuHogar.Application.Mappers;
 
 public static class PropertyMapper
 {
-    public static PropertyDto ToDto(Property property) =>
-        new PropertyDto(
+    public static PropertyDto ToDto(
+        Property property,
+        string? title = null,
+        double? latitude = null,
+        double? longitude = null,
+        int stratum = 0,
+        List<string>? services = null) => new PropertyDto(
             property.Id.Value.ToString(),
+            title ?? $"Propiedad en {property.Address.City}",
+            property.Description,
             property.Address.City,
             property.Address.Zone,
-            property.Type,
+            property.Address.Street,
             property.Price.Amount,
-            property.ImageUrls.FirstOrDefault() ?? "",
+            property.Price.Currency,
+            property.Type.ToString(),
+            property.Transaction.ToString(),
+            property.Status.ToString(),
+            stratum,
+            latitude,
+            longitude,
+            property.Status == EncuentraTuHogar.Domain.ValueObjects.VerificationStatus.Verified,
+            property.IsLocalPriority,
+            property.ImageUrls,
+            services ?? new List<string>(),
+            property.OwnerId.Value.ToString(),
             property.Views,
-            0.0,
-            property.IsLocalPriority);
-            
+            property.CreatedAt
+        );
+
     public static IEnumerable<PropertyDto> ToDto(IEnumerable<Property> properties) =>
-        properties.Select(ToDto);
+        properties.Select(p => ToDto(p));
 }
