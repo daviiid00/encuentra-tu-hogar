@@ -1,23 +1,22 @@
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using EncuentraTuHogar.Infrastructure.Identity;
+using EncuentraTuHogar.Frontend.Services;
+using EncuentraTuHogar.Application.DTOs;
 
 namespace EncuentraTuHogar.Pages;
 
 public class RegistroModel : PageModel
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly ApiClient _apiClient;
 
-    public RegistroModel(
-        UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager)
+    public RegistroModel(ApiClient apiClient)
     {
-        _userManager = userManager;
-        _signInManager = signInManager;
+        _apiClient = apiClient;
     }
 
     [BindProperty]
@@ -61,23 +60,45 @@ public class RegistroModel : PageModel
         returnUrl ??= Url.Content("~/");
         if (ModelState.IsValid)
         {
-            var user = new ApplicationUser 
-            { 
-                UserName = Input.Email, 
-                Email = Input.Email, 
-                FullName = Input.FullName,
-                IsOwner = Input.IsOwner 
-            };
+            var registerRequest = new RegisterRequest(Input.Email, Input.Password, Input.FullName, Input.IsOwner);
+            var authResponse = await _apiClient.RegisterAsync(registerRequest);
             
-            var result = await _userManager.CreateAsync(user, Input.Password);
-            if (result.Succeeded)
+            if (authResponse != null && !string.IsNullOrEmpty(authResponse.Token))
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, authResponse.Id),
+                    new Claim(ClaimTypes.Name, authResponse.Email),
+                    new Claim(ClaimTypes.Email, authResponse.Email)
+                };
+
+                foreach (var role in authResponse.Roles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
+
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                var authProperties = new AuthenticationProperties
+                {
+                    IsPersistent = false
+                };
+
+                authProperties.StoreTokens(new[]
+                {
+                    new AuthenticationToken { Name = "access_token", Value = authResponse.Token }
+                });
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity),
+                    authProperties);
+
                 return LocalRedirect(returnUrl);
             }
-            foreach (var error in result.Errors)
+            else
             {
-                ModelState.AddModelError(string.Empty, error.Description);
+                ModelState.AddModelError(string.Empty, "Error al registrar la cuenta. Es posible que el correo ya esté en uso.");
             }
         }
 
