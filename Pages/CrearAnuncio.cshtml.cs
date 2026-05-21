@@ -1,27 +1,22 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using EncuentraTuHogar.Application.Interfaces;
-using EncuentraTuHogar.Domain.Common;
-using EncuentraTuHogar.Domain.Entities;
-using EncuentraTuHogar.Domain.ValueObjects;
-using EncuentraTuHogar.Infrastructure.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using EncuentraTuHogar.Frontend.Services;
+using EncuentraTuHogar.Application.DTOs;
+using System.Security.Claims;
 
 namespace EncuentraTuHogar.Pages;
 
 [Authorize]
 public class CrearAnuncioModel : PageModel
 {
-    private readonly IPropertyRepository _propertyRepository;
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly ApiClient _apiClient;
 
-    public CrearAnuncioModel(IPropertyRepository propertyRepository, UserManager<ApplicationUser> userManager)
+    public CrearAnuncioModel(ApiClient apiClient)
     {
-        _propertyRepository = propertyRepository;
-        _userManager = userManager;
+        _apiClient = apiClient;
     }
 
     [BindProperty]
@@ -43,11 +38,11 @@ public class CrearAnuncioModel : PageModel
 
         [Required]
         [Display(Name = "Tipo de Propiedad")]
-        public PropertyType Type { get; set; }
+        public string Type { get; set; } // Modificado a string para facilitar UI binding
 
         [Required]
         [Display(Name = "Tipo de Transacción")]
-        public TransactionType Transaction { get; set; }
+        public string Transaction { get; set; } // Modificado a string para UI binding
 
         [Required]
         [Display(Name = "Precio ($)")]
@@ -68,26 +63,33 @@ public class CrearAnuncioModel : PageModel
         if (!ModelState.IsValid)
             return Page();
 
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null) return Challenge();
+        var request = new CreatePropertyRequest(
+            $"Propiedad en {Input.City}",
+            Input.Description,
+            Input.City,
+            Input.Zone,
+            Input.Street,
+            Input.Price,
+            "COP",
+            Input.Type,
+            Input.Transaction,
+            3,
+            null,
+            null,
+            new List<string>(),
+            new List<string>()
+        );
 
-        var address = new Address(Input.City, Input.Zone, Input.Street, "00000");
-        var price = new Price(Input.Price);
-        var ownerId = UserId.From(System.Guid.Parse(user.Id));
+        var propertyDto = await _apiClient.CreatePropertyAsync(request);
 
-        var propertyResult = Property.Create(address, Input.Type, Input.Transaction, price, ownerId, Input.Description);
-
-        if (propertyResult is Result<Property>.Success success)
+        if (propertyDto != null)
         {
-            await _propertyRepository.AddAsync(success.Value);
             return RedirectToPage("/Dashboard");
         }
-        else if (propertyResult is Result<Property>.Failure failure)
+        else
         {
-            ModelState.AddModelError(string.Empty, failure.Error);
+            ModelState.AddModelError(string.Empty, "Hubo un error al crear la propiedad. Verifica que eres propietario y tienes sesión válida.");
             return Page();
         }
-
-        return Page();
     }
 }

@@ -38,10 +38,10 @@
                     @foreach (var prop in Model.MisPropiedades)
                     {
                         <div style="border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; background: white;">
-                            <h4 style="margin-top: 0;">@prop.Address.City, @prop.Address.Zone</h4>
+                            <h4 style="margin-top: 0;">@prop.City, @prop.Zone</h4>
                             <p><strong>Tipo:</strong> @prop.Type <br/>
                             <strong>Transacción:</strong> @prop.Transaction <br/>
-                            <strong>Precio:</strong> @prop.Price.ToString()</p>
+                            <strong>Precio:</strong> $@prop.PriceAmount</p>
                         </div>
                     }
                 </div>
