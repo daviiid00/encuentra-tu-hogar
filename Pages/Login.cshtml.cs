@@ -49,15 +49,14 @@ public class LoginModel : PageModel
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.NameIdentifier, authResponse.Id),
-                    new Claim(ClaimTypes.Name, authResponse.Email),
+                    new Claim(ClaimTypes.NameIdentifier, authResponse.UserId),
+                    new Claim(ClaimTypes.Name, authResponse.FullName),
                     new Claim(ClaimTypes.Email, authResponse.Email)
                 };
 
-                // Añadir roles si existen en la respuesta. (Podría venir del JWT también decodificándolo)
-                foreach (var role in authResponse.Roles)
+                if (!string.IsNullOrEmpty(authResponse.Role))
                 {
-                    claims.Add(new Claim(ClaimTypes.Role, role));
+                    claims.Add(new Claim(ClaimTypes.Role, authResponse.Role));
                 }
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

@@ -12,6 +12,7 @@ public class SearchFilter
     public TransactionType? Transaction { get; set; }
     public decimal? MinPrice { get; set; }
     public decimal? MaxPrice { get; set; }
+    public string? OwnerId { get; set; }
 }
 
 public class Property : Entity
@@ -107,5 +108,6 @@ public class Property : Entity
         (filter.Type == null || filter.Type == Type) &&
         (filter.Transaction == null || filter.Transaction == Transaction) &&
         (filter.MinPrice == null || Price.Amount >= filter.MinPrice) &&
-        (filter.MaxPrice == null || Price.Amount <= filter.MaxPrice);
+        (filter.MaxPrice == null || Price.Amount <= filter.MaxPrice) &&
+        (filter.OwnerId == null || OwnerId.Value.ToString() == filter.OwnerId);
 }

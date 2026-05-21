@@ -60,21 +60,22 @@ public class RegistroModel : PageModel
         returnUrl ??= Url.Content("~/");
         if (ModelState.IsValid)
         {
-            var registerRequest = new RegisterRequest(Input.Email, Input.Password, Input.FullName, Input.IsOwner);
+            var role = Input.IsOwner ? "Landlord" : "Tenant";
+            var registerRequest = new RegisterRequest(Input.FullName, Input.Email, Input.Password, "", role, false);
             var authResponse = await _apiClient.RegisterAsync(registerRequest);
             
             if (authResponse != null && !string.IsNullOrEmpty(authResponse.Token))
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.NameIdentifier, authResponse.Id),
-                    new Claim(ClaimTypes.Name, authResponse.Email),
+                    new Claim(ClaimTypes.NameIdentifier, authResponse.UserId),
+                    new Claim(ClaimTypes.Name, authResponse.FullName),
                     new Claim(ClaimTypes.Email, authResponse.Email)
                 };
 
-                foreach (var role in authResponse.Roles)
+                if (!string.IsNullOrEmpty(authResponse.Role))
                 {
-                    claims.Add(new Claim(ClaimTypes.Role, role));
+                    claims.Add(new Claim(ClaimTypes.Role, authResponse.Role));
                 }
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

@@ -99,7 +99,8 @@ public class PropertyService : IPropertyService
             Type = propType,
             Transaction = txType,
             MinPrice = filter.MinPrice,
-            MaxPrice = filter.MaxPrice
+            MaxPrice = filter.MaxPrice,
+            OwnerId = filter.OwnerId
         };
 
         var results = await _repository.FindByFiltersAsync(searchFilter);

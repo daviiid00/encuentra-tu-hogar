@@ -60,6 +60,7 @@ public record PropertyFilterRequest(
     decimal? MinPrice,
     decimal? MaxPrice,
     bool? IsAvailable,
+    string? OwnerId,
     int? Page,
     int? PageSize
 );
