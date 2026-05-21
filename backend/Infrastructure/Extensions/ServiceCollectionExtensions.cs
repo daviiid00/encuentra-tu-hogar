@@ -55,6 +55,7 @@ public static class ServiceCollectionExtensions
             .AddAuthentication(options =>
             {
                 options.DefaultScheme = "JWT_OR_COOKIE";
+                options.DefaultAuthenticateScheme = "JWT_OR_COOKIE";
                 options.DefaultChallengeScheme = "JWT_OR_COOKIE";
             })
             // 1. Cookie Auth for Frontend
@@ -77,7 +78,8 @@ public static class ServiceCollectionExtensions
                     ValidIssuer = jwtSettings["Issuer"],
                     ValidAudience = jwtSettings["Audience"],
                     IssuerSigningKey = key,
-                    ClockSkew = TimeSpan.Zero
+                    ClockSkew = TimeSpan.Zero,
+                    RoleClaimType = System.Security.Claims.ClaimTypes.Role
                 };
             })
             // 3. Policy to route between them

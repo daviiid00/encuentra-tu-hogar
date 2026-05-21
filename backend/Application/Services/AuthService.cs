@@ -128,6 +128,7 @@ public class AuthService : IAuthService
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(ClaimTypes.Name, user.FullName),
             new Claim(ClaimTypes.Role, role),
+            new Claim("role", role),
             new Claim("isVerified", user.IsVerified.ToString()),
             new Claim("isLocalResident", user.IsLocalResident.ToString())
         };
