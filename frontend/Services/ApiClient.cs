@@ -33,24 +33,62 @@ public class ApiClient
     }
 
     // -- Auth --
-    public async Task<AuthResponse?> LoginAsync(LoginRequest request)
+    public async Task<(AuthResponse? Response, string? ErrorMessage)> LoginAsync(LoginRequest request)
     {
         var response = await _httpClient.PostAsJsonAsync("/api/auth/login", request);
         if (response.IsSuccessStatusCode)
         {
-            return await response.Content.ReadFromJsonAsync<AuthResponse>();
+            var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>();
+            return (authResponse, null);
         }
-        return null;
+        var errorContent = await response.Content.ReadAsStringAsync();
+        return (null, ParseErrorMessage(errorContent));
     }
 
-    public async Task<AuthResponse?> RegisterAsync(RegisterRequest request)
+    public async Task<(AuthResponse? Response, string? ErrorMessage)> RegisterAsync(RegisterRequest request)
     {
         var response = await _httpClient.PostAsJsonAsync("/api/auth/register", request);
         if (response.IsSuccessStatusCode)
         {
-            return await response.Content.ReadFromJsonAsync<AuthResponse>();
+            var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>();
+            return (authResponse, null);
         }
-        return null;
+        var errorContent = await response.Content.ReadAsStringAsync();
+        return (null, ParseErrorMessage(errorContent));
+    }
+
+    private string ParseErrorMessage(string jsonContent)
+    {
+        try
+        {
+            using var doc = JsonDocument.Parse(jsonContent);
+            if (doc.RootElement.TryGetProperty("message", out var msgElement))
+            {
+                return msgElement.GetString() ?? "Error desconocido";
+            }
+            if (doc.RootElement.TryGetProperty("errors", out var errorsElement))
+            {
+                // Mapear los errores de ValidationProblemDetails
+                var errorMessages = new List<string>();
+                foreach (var property in errorsElement.EnumerateObject())
+                {
+                    foreach (var error in property.Value.EnumerateArray())
+                    {
+                        errorMessages.Add(error.GetString() ?? "");
+                    }
+                }
+                if (errorMessages.Any()) return string.Join(" ", errorMessages);
+            }
+            if (doc.RootElement.TryGetProperty("title", out var titleElement))
+            {
+                return titleElement.GetString() ?? "Error de validación";
+            }
+        }
+        catch
+        {
+            // fallback
+        }
+        return "Hubo un error al procesar tu solicitud.";
     }
 
     // -- Properties --
@@ -109,7 +147,7 @@ public class ApiClient
         }
         
         var errorContent = await response.Content.ReadAsStringAsync();
-        return (null, errorContent);
+        return (null, ParseErrorMessage(errorContent));
     }
 
     // -- Visits --

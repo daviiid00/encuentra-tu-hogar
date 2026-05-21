@@ -89,19 +89,7 @@ public class CrearAnuncioModel : PageModel
         else
         {
             // Parse error if possible, or show generic
-            string errorMsg = "Hubo un error al crear la propiedad. Verifica que eres propietario y tienes sesión válida.";
-            if (!string.IsNullOrEmpty(result.Error))
-            {
-                // result.Error might be a JSON like {"error": "..."}
-                try {
-                    using var doc = System.Text.Json.JsonDocument.Parse(result.Error);
-                    if (doc.RootElement.TryGetProperty("error", out var errElement)) {
-                        errorMsg = errElement.GetString() ?? errorMsg;
-                    }
-                } catch { 
-                    // Not valid JSON, ignore
-                }
-            }
+            string errorMsg = result.Error ?? "Hubo un error al crear la propiedad. Verifica que eres propietario y tienes sesión válida.";
             ModelState.AddModelError(string.Empty, errorMsg);
             return Page();
         }

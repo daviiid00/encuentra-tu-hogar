@@ -62,10 +62,11 @@ public class RegistroModel : PageModel
         {
             var role = Input.IsOwner ? "Landlord" : "Tenant";
             var registerRequest = new RegisterRequest(Input.FullName, Input.Email, Input.Password, "", role, false);
-            var authResponse = await _apiClient.RegisterAsync(registerRequest);
+            var result = await _apiClient.RegisterAsync(registerRequest);
             
-            if (authResponse != null && !string.IsNullOrEmpty(authResponse.Token))
+            if (result.Response != null && !string.IsNullOrEmpty(result.Response.Token))
             {
+                var authResponse = result.Response;
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, authResponse.UserId),
@@ -99,7 +100,7 @@ public class RegistroModel : PageModel
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Error al registrar la cuenta. Es posible que el correo ya esté en uso.");
+                ModelState.AddModelError(string.Empty, result.ErrorMessage ?? "Error al registrar la cuenta.");
             }
         }
 

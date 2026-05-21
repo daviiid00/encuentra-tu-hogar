@@ -44,9 +44,10 @@ public class LoginModel : PageModel
 
         if (ModelState.IsValid)
         {
-            var authResponse = await _apiClient.LoginAsync(new LoginRequest(Input.Email, Input.Password));
-            if (authResponse != null && !string.IsNullOrEmpty(authResponse.Token))
+            var result = await _apiClient.LoginAsync(new LoginRequest(Input.Email, Input.Password));
+            if (result.Response != null && !string.IsNullOrEmpty(result.Response.Token))
             {
+                var authResponse = result.Response;
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, authResponse.UserId),
@@ -81,7 +82,7 @@ public class LoginModel : PageModel
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Intento de inicio de sesión no válido.");
+                ModelState.AddModelError(string.Empty, result.ErrorMessage ?? "Intento de inicio de sesión no válido.");
                 return Page();
             }
         }
