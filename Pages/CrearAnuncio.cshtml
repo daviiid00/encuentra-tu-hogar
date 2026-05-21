@@ -1,0 +1,58 @@
+@page
+@model EncuentraTuHogar.Pages.CrearAnuncioModel
+@{
+    ViewData["Title"] = "Publicar Propiedad";
+}
+
+<div class="container" style="max-width: 800px; margin: 4rem auto; padding: 2rem; background: var(--light-bg); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+    <h2 style="color: var(--primary-color); margin-bottom: 2rem;">Publicar nueva propiedad</h2>
+    
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger" style="color: var(--error-color); margin-bottom: 1rem;"></div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div class="form-group">
+                <label asp-for="Input.Transaction" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
+                <select asp-for="Input.Transaction" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" asp-items="Html.GetEnumSelectList<EncuentraTuHogar.Domain.ValueObjects.TransactionType>()">
+                    <option value="">Seleccione</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="Input.Type" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
+                <select asp-for="Input.Type" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" asp-items="Html.GetEnumSelectList<EncuentraTuHogar.Domain.ValueObjects.PropertyType>()">
+                    <option value="">Seleccione</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div class="form-group">
+                <label asp-for="Input.City" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
+                <input asp-for="Input.City" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" />
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="Input.Zone" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
+                <input asp-for="Input.Zone" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" />
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label asp-for="Input.Street" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
+            <input asp-for="Input.Street" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" />
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label asp-for="Input.Price" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
+            <input asp-for="Input.Price" type="number" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" />
+        </div>
+
+        <div class="form-group" style="margin-bottom: 2rem;">
+            <label asp-for="Input.Description" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
+            <textarea asp-for="Input.Description" rows="4" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;"></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary" style="width: 100%;">Publicar Propiedad</button>
+    </form>
+</div>

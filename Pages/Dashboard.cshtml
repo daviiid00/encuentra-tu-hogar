@@ -1,0 +1,59 @@
+@page
+@model EncuentraTuHogar.Pages.DashboardModel
+@{
+    ViewData["Title"] = "Mi Perfil";
+}
+
+<div class="container" style="max-width: 1000px; margin: 4rem auto; padding: 2rem;">
+    <h1 style="color: var(--primary-color); margin-bottom: 2rem;">Bienvenido, @Model.UserFullName</h1>
+
+    <div style="display: grid; grid-template-columns: 1fr; gap: 2rem;">
+        
+        <div style="background: var(--light-bg); border-radius: 12px; padding: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            <h3 style="color: var(--primary-color); border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem;">Mis Visitas Programadas</h3>
+            @if (Model.MisVisitasProgramadas.Any())
+            {
+                <ul style="list-style: none; padding: 0;">
+                    @foreach (var visita in Model.MisVisitasProgramadas)
+                    {
+                        <li style="padding: 1rem; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 1rem; background: white;">
+                            <strong>Propiedad ID:</strong> @visita.PropertyId <br/>
+                            <strong>Fecha:</strong> @visita.ScheduledDate.ToString("g") <br/>
+                            <strong>Estado:</strong> @visita.Status
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>No tienes visitas programadas aún.</p>
+            }
+        </div>
+
+        @if (Model.MisPropiedades.Any())
+        {
+            <div style="background: var(--light-bg); border-radius: 12px; padding: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                <h3 style="color: var(--primary-color); border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem;">Mis Propiedades Publicadas</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                    @foreach (var prop in Model.MisPropiedades)
+                    {
+                        <div style="border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; background: white;">
+                            <h4 style="margin-top: 0;">@prop.Address.City, @prop.Address.Zone</h4>
+                            <p><strong>Tipo:</strong> @prop.Type <br/>
+                            <strong>Transacción:</strong> @prop.Transaction <br/>
+                            <strong>Precio:</strong> @prop.Price.ToString()</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else if (User.Identity?.IsAuthenticated == true)
+        {
+            <!-- User is authenticated but has no properties, maybe show a prompt if they are an owner -->
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="/CrearAnuncio" class="btn-primary" style="text-decoration: none;">Publicar una Vivienda</a>
+            </div>
+        }
+
+    </div>
+</div>

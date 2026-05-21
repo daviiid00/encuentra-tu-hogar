@@ -1,0 +1,25 @@
+@page
+@model EncuentraTuHogar.Pages.AgendarVisitaModel
+@{
+    ViewData["Title"] = "Agendar Visita";
+}
+
+<div class="container" style="max-width: 600px; margin: 4rem auto; padding: 2rem; background: var(--light-bg); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+    <h2 style="color: var(--primary-color); margin-bottom: 2rem;">Agendar una Visita</h2>
+    
+    <p style="margin-bottom: 2rem;">Selecciona el momento ideal para visitar la propiedad. El propietario será notificado inmediatamente.</p>
+
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger" style="color: var(--error-color); margin-bottom: 1rem;"></div>
+        
+        <input type="hidden" asp-for="Input.PropertyId" />
+        
+        <div class="form-group" style="margin-bottom: 2rem;">
+            <label asp-for="Input.ScheduledDate" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
+            <input asp-for="Input.ScheduledDate" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" />
+            <span asp-validation-for="Input.ScheduledDate" class="text-danger" style="color: var(--error-color); font-size: 0.85rem;"></span>
+        </div>
+        
+        <button type="submit" class="btn-primary" style="width: 100%;">Confirmar Cita</button>
+    </form>
+</div>

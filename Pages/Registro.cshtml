@@ -1,0 +1,48 @@
+@page
+@model EncuentraTuHogar.Pages.RegistroModel
+@{
+    ViewData["Title"] = "Registro";
+}
+
+<div class="container" style="max-width: 500px; margin: 4rem auto; padding: 2rem; background: var(--light-bg); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+    <h2 style="color: var(--primary-color); text-align: center; margin-bottom: 2rem;">Crea tu cuenta</h2>
+    
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger" style="color: var(--error-color); margin-bottom: 1rem;"></div>
+        
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label asp-for="Input.FullName" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
+            <input asp-for="Input.FullName" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" />
+            <span asp-validation-for="Input.FullName" class="text-danger" style="color: var(--error-color); font-size: 0.85rem;"></span>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label asp-for="Input.Email" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
+            <input asp-for="Input.Email" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" />
+            <span asp-validation-for="Input.Email" class="text-danger" style="color: var(--error-color); font-size: 0.85rem;"></span>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label asp-for="Input.Password" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
+            <input asp-for="Input.Password" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" />
+            <span asp-validation-for="Input.Password" class="text-danger" style="color: var(--error-color); font-size: 0.85rem;"></span>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1rem;">
+            <label asp-for="Input.ConfirmPassword" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
+            <input asp-for="Input.ConfirmPassword" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" />
+            <span asp-validation-for="Input.ConfirmPassword" class="text-danger" style="color: var(--error-color); font-size: 0.85rem;"></span>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+            <input asp-for="Input.IsOwner" type="checkbox" />
+            <label asp-for="Input.IsOwner" style="margin: 0; font-weight: 500;"></label>
+        </div>
+        
+        <button type="submit" class="btn-primary" style="width: 100%;">Registrarme</button>
+    </form>
+    
+    <div style="text-align: center; margin-top: 1.5rem;">
+        <p>¿Ya tienes cuenta? <a href="/Login" style="font-weight: 600;">Inicia sesión aquí</a></p>
+    </div>
+</div>

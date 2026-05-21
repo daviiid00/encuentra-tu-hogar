@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Encuentra Tu Hogar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <img src="/images/logo-icon.svg" alt="Encuentra Tu Hogar" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzFCM0I1QyI+PHBhdGggZD0iTTEyIDNMMCAxMS41TDIgMTRMMTIgNi45TDIyIDE0TDI0IDExLjVMMTIgM1pNMiAxNWgyMHY3SDJ2LTdaIi8+PC9zdmc+';" />
+                Encuentra Tu Hogar
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Inicio</a></li>
+                <li><a href="#">Cómo Funciona</a></li>
+                <li><a href="#">Experiencias</a></li>
+                <li><a href="/Comunidad">Comunidad</a></li>
+                
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <li><a href="/Dashboard">Mi Perfil (@User.Identity.Name)</a></li>
+                    <li>
+                        <form method="post" action="/Logout" style="display:inline;">
+                            <button type="submit" class="btn-primary" style="background: var(--error-color);">Salir</button>
+                        </form>
+                    </li>
+                }
+                else
+                {
+                    <li><a href="/Login" class="btn-primary" style="color: white; padding: 0.5rem 1.5rem; text-decoration: none;">Ingresar</a></li>
+                }
+            </ul>
+        </nav>
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <a href="https://wa.me/573000000000?text=Hola,%20quisiera%20saber%20m%C3%A1s%20sobre%20Encuentra%20Tu%20Hogar" target="_blank" class="chat-fab" style="text-decoration:none;">💬</a>
+
+    <footer>
+        <p>&copy; 2026 - Encuentra Tu Hogar - Tu plataforma segura de arriendos directos.</p>
+    </footer>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

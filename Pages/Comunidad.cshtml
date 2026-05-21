@@ -1,0 +1,80 @@
+@page
+@model EncuentraTuHogar.Pages.ComunidadModel
+@{
+    ViewData["Title"] = "Comunidad en Vivo";
+}
+
+<div class="container" style="max-width: 800px; margin: 4rem auto; padding: 2rem; background: var(--light-bg); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+    <h2 style="color: var(--primary-color); margin-bottom: 2rem;">Chat de la Comunidad</h2>
+
+    <div id="chatMessages" style="height: 400px; overflow-y: scroll; background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+        <!-- Messages will appear here -->
+    </div>
+
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <div style="display: flex; gap: 1rem;">
+            <input type="text" id="messageInput" class="form-control" style="flex: 1; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px;" placeholder="Escribe un mensaje..." />
+            <button id="sendButton" class="btn-primary">Enviar</button>
+        </div>
+    }
+    else
+    {
+        <div style="padding: 1rem; background: #fff3cd; color: #856404; border-radius: 4px; text-align: center;">
+            <p style="margin:0;">Para participar en la comunidad debes <a href="/Login" style="font-weight: 600; color: #856404; text-decoration: underline;">iniciar sesión</a>.</p>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script>
+        const userName = '@(User.Identity?.Name ?? "Anónimo")';
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/communityChatHub")
+            .build();
+
+        connection.on("ReceiveMessage", function (user, message) {
+            const msgDiv = document.createElement("div");
+            msgDiv.style.padding = "0.5rem 1rem";
+            msgDiv.style.borderRadius = "8px";
+            msgDiv.style.background = "var(--light-bg)";
+            msgDiv.style.maxWidth = "80%";
+            
+            const isMe = user === userName;
+            if (isMe) {
+                msgDiv.style.background = "var(--primary-color)";
+                msgDiv.style.color = "white";
+                msgDiv.style.alignSelf = "flex-end";
+            } else {
+                msgDiv.style.alignSelf = "flex-start";
+            }
+
+            msgDiv.innerHTML = `<strong>${user}</strong><br>${message}`;
+            document.getElementById("chatMessages").appendChild(msgDiv);
+            document.getElementById("chatMessages").scrollTop = document.getElementById("chatMessages").scrollHeight;
+        });
+
+        connection.start().catch(function (err) {
+            return console.error(err.toString());
+        });
+
+        document.getElementById("sendButton")?.addEventListener("click", function (event) {
+            const message = document.getElementById("messageInput").value;
+            if (message.trim() !== '') {
+                connection.invoke("SendMessage", userName, message).catch(function (err) {
+                    return console.error(err.toString());
+                });
+                document.getElementById("messageInput").value = '';
+            }
+            event.preventDefault();
+        });
+        
+        document.getElementById("messageInput")?.addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                document.getElementById("sendButton").click();
+            }
+        });
+    </script>
+}

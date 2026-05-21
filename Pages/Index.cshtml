@@ -1,0 +1,138 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-content">
+        <h1>Encuentra tu vivienda <br><span>rápida y fácil</span></h1>
+        <p>Soluciones a tu alcance</p>
+        
+        <div class="search-box">
+            <div class="search-input-group">
+                <select id="city">
+                    <option value="">Ciudad</option>
+                    <option value="medellin">Medellín</option>
+                    <option value="bogota">Bogotá</option>
+                    <option value="cali">Cali</option>
+                </select>
+            </div>
+            <div class="search-input-group">
+                <select id="propertyType">
+                    <option value="">Tipo de vivienda</option>
+                    <option value="1">Apartamento</option>
+                    <option value="2">Casa</option>
+                    <option value="3">Estudio</option>
+                </select>
+            </div>
+            <div class="search-input-group">
+                <select id="priceRange">
+                    <option value="">Rango de precio</option>
+                    <option value="low">Hasta $1.5M</option>
+                    <option value="medium">$1.5M - $3M</option>
+                    <option value="high">Más de $3M</option>
+                </select>
+            </div>
+            <button class="btn-secondary" style="height: 42px; width: 120px;">Buscar</button>
+        </div>
+    </div>
+</section>
+
+<!-- Features / Quick Access Section -->
+<section class="features-section">
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">📱</div>
+            <div class="feature-text">
+                <h3>Acceso rápido y seguro</h3>
+                <p>Explora opciones en minutos</p>
+            </div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📋</div>
+            <div class="feature-text">
+                <h3>Regístrate sin complicaciones</h3>
+                <p>Tus datos están protegidos</p>
+            </div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">👥</div>
+            <div class="feature-text">
+                <h3>Comunidad de apoyo</h3>
+                <p>Comparte experiencias reales</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Owner Section -->
+<section class="owner-section">
+    <h2 class="owner-section-title">¿Eres Propietario?</h2>
+    
+    <div class="owner-banner">
+        <div class="owner-content">
+            <h2 style="color: var(--primary-color);">Quiero Ofertar mi Vivienda</h2>
+            <ul>
+                <li>Publica gratis tu propiedad en minutos</li>
+                <li>Llega a cientos de inquilinos</li>
+                <li>Gestiona tus interesados sin complicaciones</li>
+            </ul>
+            <a href="/CrearAnuncio" class="btn-secondary" style="display: inline-block; text-decoration: none;">Publicar mi propiedad</a>
+        </div>
+        <div class="owner-image"></div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="categories-section">
+    <h2>Propiedades Destacadas</h2>
+    
+    <div class="categories-grid">
+        <div class="category-card">
+            <div class="category-icon">🔍</div>
+            <h3>Busca y Explora</h3>
+            <p>Encuentra opciones</p>
+        </div>
+        <div class="category-card">
+            <div class="category-icon">📝</div>
+            <h3>Regístrate Fácil</h3>
+            <p>Guarda tus datos</p>
+        </div>
+        <a href="/AgendarVisita" class="category-card" style="text-decoration: none; color: inherit; display: block;">
+            <div class="category-icon">📅</div>
+            <h3>Agenda una Visita</h3>
+            <p>Programa tu cita</p>
+        </a>
+        <a href="/Comunidad" class="category-card" style="text-decoration: none; color: inherit; display: block;">
+            <div class="category-icon">💬</div>
+            <h3>Conéctate con la Comunidad</h3>
+            <p>Recibe apoyo</p>
+        </a>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials-section">
+    <h2>Experiencias de Nuestros Usuarios</h2>
+    
+    <div class="testimonials-grid">
+        <div class="testimonial-card">
+            <img src="/images/ana.webp" alt="Ana G." class="testimonial-img" />
+            <div class="testimonial-content">
+                <h4>Ana G.</h4>
+                <p class="testimonial-quote">"Ahora tengo mi hogar ideal"</p>
+                <p class="testimonial-text">Encontré rápido un lugar seguro. Me sentí acompañada en todo el proceso.</p>
+            </div>
+        </div>
+        <div class="testimonial-card">
+            <img src="/images/carlos.webp" alt="Carlos M." class="testimonial-img" />
+            <div class="testimonial-content">
+                <h4>Carlos M.</h4>
+                <p class="testimonial-quote">"Excelente servicio"</p>
+                <p class="testimonial-text">Gracias a la app conseguí un departamento en pocos días. Todo fue simple y claro.</p>
+            </div>
+        </div>
+    </div>
+</section>

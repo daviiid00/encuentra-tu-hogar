@@ -1,0 +1,30 @@
+# Normalizar fin de línea a LF en el repositorio, CRLF al hacer checkout en Windows
+* text=auto
+
+# Forzar LF para archivos de código
+*.cs      text eol=lf
+*.cshtml  text eol=lf
+*.json    text eol=lf
+*.md      text eol=lf
+*.css     text eol=lf
+*.js      text eol=lf
+*.html    text eol=lf
+*.csproj  text eol=lf
+*.yml     text eol=lf
+*.yaml    text eol=lf
+
+# Binarios — sin conversión
+*.db      binary
+*.db-shm  binary
+*.db-wal  binary
+*.ico     binary
+*.webp    binary
+*.png     binary
+*.jpg     binary
+*.jpeg    binary
+*.gif     binary
+*.woff    binary
+*.woff2   binary
+*.ttf     binary
+*.eot     binary
+*.map     binary
