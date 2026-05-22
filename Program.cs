@@ -78,6 +78,9 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<EncuentraTuHogar.Infrastructure.Persistence.AppDbContext>();
     dbContext.Database.Migrate();
+
+    // Sembrar datos de demostración
+    EncuentraTuHogar.Infrastructure.Persistence.DbSeeder.SeedAsync(scope.ServiceProvider).Wait();
 }
 
 app.UseHttpsRedirection();
