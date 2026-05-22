@@ -62,6 +62,10 @@ public class ApiClient
         try
         {
             using var doc = JsonDocument.Parse(jsonContent);
+            if (doc.RootElement.TryGetProperty("error", out var errElement))
+            {
+                return errElement.GetString() ?? "Error desconocido";
+            }
             if (doc.RootElement.TryGetProperty("message", out var msgElement))
             {
                 return msgElement.GetString() ?? "Error desconocido";
@@ -146,6 +150,11 @@ public class ApiClient
             return (property, null);
         }
         
+        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            return (null, "Tu sesión ha expirado o no has iniciado sesión.");
+        if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            return (null, "No tienes permisos para realizar esta acción. Debes estar registrado como propietario.");
+
         var errorContent = await response.Content.ReadAsStringAsync();
         return (null, ParseErrorMessage(errorContent));
     }
