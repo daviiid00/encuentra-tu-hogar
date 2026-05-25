@@ -4,66 +4,194 @@
     ViewData["Title"] = "Publicar Propiedad";
 }
 
-<div class="container" style="max-width: 800px; margin: 4rem auto; padding: 2rem; background: var(--light-bg); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-    <h2 style="color: var(--primary-color); margin-bottom: 2rem;">Publicar nueva propiedad</h2>
-    
-    <form method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger" style="color: var(--error-color); margin-bottom: 1rem;"></div>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-            <div class="form-group">
-                <label asp-for="Input.Transaction" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
-                <select asp-for="Input.Transaction" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" asp-items="Html.GetEnumSelectList<EncuentraTuHogar.Domain.ValueObjects.TransactionType>()">
-                    <option value="">Seleccione</option>
-                </select>
-                <span asp-validation-for="Input.Transaction" class="text-danger" style="color: var(--error-color); font-size: 0.85rem;"></span>
+<div class="anuncio-page">
+
+    <!-- Header -->
+    <div class="reveal" style="margin-bottom:2rem;">
+        <a href="/" style="display:inline-flex;align-items:center;gap:0.4rem;color:var(--text-muted);font-size:0.875rem;font-weight:500;margin-bottom:1rem;text-decoration:none;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Volver al inicio
+        </a>
+        <span class="section-eyebrow">Nuevo anuncio</span>
+        <h1 class="section-title" style="margin-bottom:0.5rem;">Publicar una vivienda</h1>
+        <p style="color:var(--text-secondary);font-size:0.9375rem;">
+            Conecta directamente con inquilinos verificados. Sin intermediarios, sin comisiones.
+        </p>
+    </div>
+
+    <!-- Steps indicator (visual) -->
+    <div class="form-steps reveal" style="margin-bottom:2rem;">
+        <div class="form-step active">
+            <span class="form-step-num">1</span>
+            Información básica
+        </div>
+        <div class="form-step">
+            <span class="form-step-num">2</span>
+            Ubicación
+        </div>
+        <div class="form-step">
+            <span class="form-step-num">3</span>
+            Precio y detalles
+        </div>
+    </div>
+
+    <!-- Main layout: form + preview -->
+    <div style="display:grid;grid-template-columns:1fr 320px;gap:2rem;align-items:start;" class="reveal">
+
+        <!-- Form card -->
+        <div class="card" style="padding:2rem;">
+            <form method="post" id="anuncioForm">
+                <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+                <!-- Row 1: Tipo de transacción + tipo de propiedad -->
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label asp-for="Input.Transaction" class="form-label">Tipo de transacción</label>
+                        <select asp-for="Input.Transaction"
+                                class="form-control"
+                                asp-items="Html.GetEnumSelectList<EncuentraTuHogar.Domain.ValueObjects.TransactionType>()"
+                                id="input-transaction">
+                            <option value="">Seleccione...</option>
+                        </select>
+                        <span asp-validation-for="Input.Transaction" class="form-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.Type" class="form-label">Tipo de vivienda</label>
+                        <select asp-for="Input.Type"
+                                class="form-control"
+                                asp-items="Html.GetEnumSelectList<EncuentraTuHogar.Domain.ValueObjects.PropertyType>()"
+                                id="input-type">
+                            <option value="">Seleccione...</option>
+                        </select>
+                        <span asp-validation-for="Input.Type" class="form-error"></span>
+                    </div>
+                </div>
+
+                <!-- Row 2: Ciudad + zona -->
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label asp-for="Input.City" class="form-label">Ciudad</label>
+                        <input asp-for="Input.City"
+                               class="form-control"
+                               placeholder="Ej: Medellín"
+                               id="input-city" />
+                        <span asp-validation-for="Input.City" class="form-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.Zone" class="form-label">Barrio / Zona</label>
+                        <input asp-for="Input.Zone"
+                               class="form-control"
+                               placeholder="Ej: Laureles"
+                               id="input-zone" />
+                        <span asp-validation-for="Input.Zone" class="form-error"></span>
+                    </div>
+                </div>
+
+                <!-- Street -->
+                <div class="form-group">
+                    <label asp-for="Input.Street" class="form-label">Dirección</label>
+                    <input asp-for="Input.Street"
+                           class="form-control"
+                           placeholder="Calle o carrera (no se muestra públicamente)"
+                           id="input-street" />
+                    <span class="form-hint">La dirección exacta solo se comparte al confirmar una visita.</span>
+                    <span asp-validation-for="Input.Street" class="form-error"></span>
+                </div>
+
+                <!-- Price -->
+                <div class="form-group">
+                    <label asp-for="Input.Price" class="form-label">Precio mensual (COP)</label>
+                    <div style="position:relative;">
+                        <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--text-muted);font-weight:600;font-size:0.9375rem;">$</span>
+                        <input asp-for="Input.Price"
+                               type="number"
+                               class="form-control"
+                               placeholder="1.500.000"
+                               style="padding-left:2rem;"
+                               id="input-price"
+                               min="0" />
+                    </div>
+                    <span asp-validation-for="Input.Price" class="form-error"></span>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group" style="margin-bottom:2rem;">
+                    <label asp-for="Input.Description" class="form-label">Descripción de la vivienda</label>
+                    <textarea asp-for="Input.Description"
+                              rows="4"
+                              class="form-control"
+                              placeholder="Describe las características principales: habitaciones, baños, garaje, servicios incluidos, normas de convivencia..."
+                              id="input-description"></textarea>
+                    <span asp-validation-for="Input.Description" class="form-error"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg btn-full" id="btn-publicar-anuncio">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Publicar vivienda
+                </button>
+            </form>
+        </div>
+
+        <!-- Preview card -->
+        <div style="position:sticky;top:88px;">
+            <div class="card" style="border-color:var(--primary-light);">
+                <div style="background:linear-gradient(135deg,var(--bg-muted),var(--primary-light));height:140px;border-radius:var(--radius-sm);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;font-size:3rem;opacity:0.5;">🏠</div>
+                <span class="badge badge-green" style="margin-bottom:0.625rem;" id="preview-type">Tu vivienda</span>
+                <div style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:0.25rem;" id="preview-location">
+                    📍 Ciudad, Barrio
+                </div>
+                <div style="font-size:1.375rem;font-weight:800;color:var(--primary);letter-spacing:-0.03em;margin:0.5rem 0;" id="preview-price">
+                    $— /mes
+                </div>
+                <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.5;" id="preview-desc">
+                    La descripción aparecerá aquí...
+                </div>
+                <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:0.5rem;">
+                    <span class="badge badge-gray">Vista previa</span>
+                    <span style="font-size:0.75rem;color:var(--text-muted);">Así verán tu anuncio</span>
+                </div>
             </div>
-            
-            <div class="form-group">
-                <label asp-for="Input.Type" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
-                <select asp-for="Input.Type" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" asp-items="Html.GetEnumSelectList<EncuentraTuHogar.Domain.ValueObjects.PropertyType>()">
-                    <option value="">Seleccione</option>
-                </select>
-                <span asp-validation-for="Input.Type" class="text-danger" style="color: var(--error-color); font-size: 0.85rem;"></span>
+
+            <!-- Tips -->
+            <div style="margin-top:1rem;background:var(--accent-light);border:1px solid rgba(37,99,235,0.15);border-radius:var(--radius);padding:1rem;">
+                <p style="font-size:0.8125rem;font-weight:700;color:var(--accent);margin-bottom:0.5rem;">💡 Consejos</p>
+                <ul style="font-size:0.8rem;color:var(--text-secondary);padding-left:1rem;line-height:1.7;margin:0;">
+                    <li>Una descripción detallada atrae más inquilinos</li>
+                    <li>El precio justo reduce el tiempo de espera</li>
+                    <li>Prioriza perfiles verificados de la comunidad</li>
+                </ul>
             </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-            <div class="form-group">
-                <label asp-for="Input.City" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
-                <input asp-for="Input.City" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" />
-                <span asp-validation-for="Input.City" class="text-danger" style="color: var(--error-color); font-size: 0.85rem;"></span>
-            </div>
-            
-            <div class="form-group">
-                <label asp-for="Input.Zone" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
-                <input asp-for="Input.Zone" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" />
-                <span asp-validation-for="Input.Zone" class="text-danger" style="color: var(--error-color); font-size: 0.85rem;"></span>
-            </div>
-        </div>
-
-        <div class="form-group" style="margin-bottom: 1rem;">
-            <label asp-for="Input.Street" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
-            <input asp-for="Input.Street" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" />
-            <span asp-validation-for="Input.Street" class="text-danger" style="color: var(--error-color); font-size: 0.85rem;"></span>
-        </div>
-
-        <div class="form-group" style="margin-bottom: 1rem;">
-            <label asp-for="Input.Price" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
-            <input asp-for="Input.Price" type="number" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" />
-            <span asp-validation-for="Input.Price" class="text-danger" style="color: var(--error-color); font-size: 0.85rem;"></span>
-        </div>
-
-        <div class="form-group" style="margin-bottom: 2rem;">
-            <label asp-for="Input.Description" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
-            <textarea asp-for="Input.Description" rows="4" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;"></textarea>
-            <span asp-validation-for="Input.Description" class="text-danger" style="color: var(--error-color); font-size: 0.85rem;"></span>
-        </div>
-
-        <button type="submit" class="btn-primary" style="width: 100%;">Publicar Propiedad</button>
-    </form>
+    </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Live preview
+        function updatePreview() {
+            const city = document.getElementById('input-city')?.value || '';
+            const zone = document.getElementById('input-zone')?.value || '';
+            const price = document.getElementById('input-price')?.value || '';
+            const desc = document.getElementById('input-description')?.value || '';
+            const typeEl = document.getElementById('input-type');
+            const typeText = typeEl?.options[typeEl?.selectedIndex]?.text || 'Tu vivienda';
+
+            const loc = [city, zone].filter(Boolean).join(', ') || 'Ciudad, Barrio';
+            document.getElementById('preview-location').textContent = '📍 ' + loc;
+            document.getElementById('preview-price').textContent = price
+                ? '$' + parseInt(price).toLocaleString('es-CO') + ' /mes'
+                : '$— /mes';
+            document.getElementById('preview-desc').textContent = desc.substring(0, 100) + (desc.length > 100 ? '...' : '');
+            document.getElementById('preview-type').textContent = typeText !== 'Seleccione...' ? typeText : 'Tu vivienda';
+        }
+
+        ['input-city','input-zone','input-price','input-description','input-type'].forEach(id => {
+            document.getElementById(id)?.addEventListener('input', updatePreview);
+            document.getElementById(id)?.addEventListener('change', updatePreview);
+        });
+    </script>
 }

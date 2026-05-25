@@ -4,22 +4,115 @@
     ViewData["Title"] = "Agendar Visita";
 }
 
-<div class="container" style="max-width: 600px; margin: 4rem auto; padding: 2rem; background: var(--light-bg); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-    <h2 style="color: var(--primary-color); margin-bottom: 2rem;">Agendar una Visita</h2>
-    
-    <p style="margin-bottom: 2rem;">Selecciona el momento ideal para visitar la propiedad. El propietario será notificado inmediatamente.</p>
+<div class="visit-page">
 
-    <form method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger" style="color: var(--error-color); margin-bottom: 1rem;"></div>
-        
-        <input type="hidden" asp-for="Input.PropertyId" />
-        
-        <div class="form-group" style="margin-bottom: 2rem;">
-            <label asp-for="Input.ScheduledDate" style="display: block; margin-bottom: 0.5rem; font-weight: 500;"></label>
-            <input asp-for="Input.ScheduledDate" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box;" />
-            <span asp-validation-for="Input.ScheduledDate" class="text-danger" style="color: var(--error-color); font-size: 0.85rem;"></span>
+    <!-- Header -->
+    <div class="reveal" style="margin-bottom:2rem;">
+        <a href="/" style="display:inline-flex;align-items:center;gap:0.4rem;color:var(--text-muted);font-size:0.875rem;font-weight:500;margin-bottom:1rem;text-decoration:none;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Volver
+        </a>
+        <span class="section-eyebrow">Reserva tu visita</span>
+        <h1 class="section-title" style="margin-bottom:0.5rem;">Agendar una Visita</h1>
+        <p style="color:var(--text-secondary);font-size:0.9375rem;">
+            El propietario recibirá tu solicitud inmediatamente y te confirmará por la plataforma.
+        </p>
+    </div>
+
+    <div class="visit-grid reveal">
+
+        <!-- Property info panel -->
+        <div class="visit-property-info">
+            <div class="visit-property-img">🏠</div>
+
+            <div>
+                <span class="badge badge-green" style="margin-bottom:0.75rem;">Propiedad verificada</span>
+                <h3 style="font-size:1.0625rem;margin-bottom:0.5rem;color:var(--text);">Detalles de la propiedad</h3>
+                <p style="font-size:0.875rem;color:var(--text-secondary);line-height:1.6;margin-bottom:1.25rem;">
+                    Al confirmar la visita, el propietario recibirá tu solicitud y coordinarán el horario final juntos.
+                </p>
+            </div>
+
+            <!-- Process steps -->
+            <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+                    <div style="width:28px;height:28px;border-radius:50%;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">1</div>
+                    <div>
+                        <div style="font-size:0.875rem;font-weight:600;color:var(--text);">Selecciona la fecha</div>
+                        <div style="font-size:0.8rem;color:var(--text-muted);">Elige el momento que mejor te convenga</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+                    <div style="width:28px;height:28px;border-radius:50%;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">2</div>
+                    <div>
+                        <div style="font-size:0.875rem;font-weight:600;color:var(--text);">El propietario confirma</div>
+                        <div style="font-size:0.8rem;color:var(--text-muted);">Recibirás confirmación en tu perfil</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+                    <div style="width:28px;height:28px;border-radius:50%;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;">3</div>
+                    <div>
+                        <div style="font-size:0.875rem;font-weight:600;color:var(--text);">¡Visita tu nuevo hogar!</div>
+                        <div style="font-size:0.8rem;color:var(--text-muted);">Sin agencias, trato directo y humano</div>
+                    </div>
+                </div>
+            </div>
         </div>
-        
-        <button type="submit" class="btn-primary" style="width: 100%;">Confirmar Cita</button>
-    </form>
+
+        <!-- Form card -->
+        <div class="visit-form-card">
+
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.75rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);">
+                <div style="width:40px;height:40px;background:var(--primary-light);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">📅</div>
+                <div>
+                    <div style="font-weight:700;font-size:0.9375rem;color:var(--text);">Seleccionar fecha y hora</div>
+                    <div style="font-size:0.8125rem;color:var(--text-muted);">Elige cuándo quieres conocer la propiedad</div>
+                </div>
+            </div>
+
+            <form method="post" id="visitaForm">
+                <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+                <input type="hidden" asp-for="Input.PropertyId" />
+
+                <div class="form-group" style="margin-bottom:2rem;">
+                    <label asp-for="Input.ScheduledDate" class="form-label">Fecha y hora de la visita</label>
+                    <input asp-for="Input.ScheduledDate"
+                           class="form-control"
+                           type="datetime-local"
+                           id="input-scheduled-date" />
+                    <span class="form-hint">Las visitas suelen ser entre semana de 9am a 6pm o fines de semana.</span>
+                    <span asp-validation-for="Input.ScheduledDate" class="form-error"></span>
+                </div>
+
+                <!-- Notice -->
+                <div style="background:var(--primary-light);border:1px solid rgba(26,107,74,0.15);border-radius:var(--radius);padding:1rem;margin-bottom:1.5rem;display:flex;gap:0.75rem;align-items:flex-start;">
+                    <span style="font-size:1.1rem;flex-shrink:0;">💚</span>
+                    <p style="font-size:0.8125rem;color:var(--primary);margin:0;line-height:1.6;font-weight:500;">
+                        Esta plataforma prioriza el trato directo y humano. Nada de intermediarios ni comisiones. La visita es gratuita.
+                    </p>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg btn-full" id="btn-confirmar-visita">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    Confirmar visita
+                </button>
+            </form>
+        </div>
+
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Set minimum date to today
+        const dateInput = document.getElementById('input-scheduled-date');
+        if (dateInput) {
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            dateInput.min = now.toISOString().slice(0, 16);
+        }
+    </script>
+}
