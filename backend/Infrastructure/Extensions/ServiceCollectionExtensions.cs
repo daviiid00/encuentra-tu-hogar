@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using System.Text;
 using EncuentraTuHogar.Application.Interfaces;
 using EncuentraTuHogar.Application.Services;
@@ -82,16 +83,18 @@ public static class ServiceCollectionExtensions
                     RoleClaimType = System.Security.Claims.ClaimTypes.Role
                 };
             })
-            // 3. Policy to route between them
+            // 3. Policy: JWT si hay Bearer token en el header, Cookie en cualquier otro caso
             .AddPolicyScheme("JWT_OR_COOKIE", "JWT_OR_COOKIE", options =>
             {
                 options.ForwardDefaultSelector = context =>
                 {
-                    // Call JWT for all /api endpoints
-                    if (context.Request.Path.StartsWithSegments("/api"))
+                    // Si hay un Bearer token en el header Authorization → usar JWT
+                    string? authorization = context.Request.Headers[HeaderNames.Authorization];
+                    if (!string.IsNullOrEmpty(authorization) &&
+                        authorization.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
                         return JwtBearerDefaults.AuthenticationScheme;
-                        
-                    // Otherwise use Cookies for Razor Pages
+
+                    // En cualquier otro caso (Razor Pages, llamadas internas sin token) → Cookie
                     return Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
                 };
             });
