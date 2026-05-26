@@ -64,7 +64,7 @@ public static class ServiceCollectionExtensions
             {
                 options.LoginPath = "/Login";
                 options.LogoutPath = "/Logout";
-                options.AccessDeniedPath = "/Error";
+                options.AccessDeniedPath = "/AccessDenied";
                 options.Cookie.Name = "EncuentraTuHogarAuth";
             })
             // 2. JWT Auth for Backend APIs

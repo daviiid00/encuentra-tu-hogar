@@ -1,0 +1,20 @@
+@page
+@model EncuentraTuHogar.Pages.AccessDeniedModel
+@{
+    ViewData["Title"] = "Acceso Denegado";
+}
+
+<div style="min-height: calc(100vh - 68px); display: flex; align-items: center; justify-content: center; padding: 2rem;">
+    <div style="max-width: 500px; text-align: center;">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">🔒</div>
+        <h1 style="font-size: 2rem; color: var(--text); font-weight: 800; margin-bottom: 1rem;">
+            Acceso restringido
+        </h1>
+        <p style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem;">
+            No eres propietario. Solo los usuarios registrados como propietarios pueden publicar viviendas o editar propiedades.
+        </p>
+        <a href="/Dashboard" class="btn btn-primary btn-lg">
+            Volver a mi perfil
+        </a>
+    </div>
+</div>
