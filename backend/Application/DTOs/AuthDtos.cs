@@ -18,7 +18,6 @@ public record RegisterRequest(
     [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{6,}$", ErrorMessage = "La contraseña debe tener una mayúscula, un número y un carácter especial")]
     string Password,
 
-    [Required(ErrorMessage = "La ciudad es obligatoria")]
     string City,
 
     [Required(ErrorMessage = "El rol es obligatorio")]
