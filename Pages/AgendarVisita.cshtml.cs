@@ -69,11 +69,11 @@ public class AgendarVisitaModel : PageModel
         }
 
         var request = new ScheduleVisitRequest(propId, Input.ScheduledDate);
-        var visit = await _apiClient.CreateVisitAsync(request);
+        var result = await _apiClient.CreateVisitAsync(request);
 
-        if (visit == null)
+        if (result.Visit == null)
         {
-            ModelState.AddModelError(string.Empty, "Error al agendar la visita. Intente nuevamente.");
+            ModelState.AddModelError(string.Empty, result.Error ?? "Error al agendar la visita. Intenta nuevamente.");
             return Page();
         }
 

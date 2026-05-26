@@ -161,14 +161,25 @@ public class ApiClient
     }
 
     // -- Visits --
-    public async Task<VisitDto?> CreateVisitAsync(ScheduleVisitRequest request)
+    public async Task<(VisitDto? Visit, string? Error)> CreateVisitAsync(ScheduleVisitRequest request)
     {
         await SetAuthorizationHeaderAsync();
         var response = await _httpClient.PostAsJsonAsync("/api/visits", request);
         if (response.IsSuccessStatusCode)
         {
-            return await response.Content.ReadFromJsonAsync<VisitDto>();
+            var visit = await response.Content.ReadFromJsonAsync<VisitDto>();
+            return (visit, null);
         }
-        return null;
+
+        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            return (null, "Tu sesión ha expirado. Por favor inicia sesión nuevamente.");
+        if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            return (null, ParseErrorMessage(errorContent));
+        }
+
+        var content = await response.Content.ReadAsStringAsync();
+        return (null, $"Error del servidor ({(int)response.StatusCode}): {ParseErrorMessage(content)}");
     }
 }
