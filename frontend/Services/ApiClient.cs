@@ -4,6 +4,7 @@ using System.Text.Json;
 using EncuentraTuHogar.Application.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace EncuentraTuHogar.Frontend.Services;
 
@@ -23,8 +24,10 @@ public class ApiClient
         var context = _httpContextAccessor.HttpContext;
         if (context != null)
         {
-            // Extraer el token de la sesión (cookie) si existe
-            var token = await context.GetTokenAsync("access_token");
+            // Especificar el esquema Cookie explícitamente para encontrar el token
+            var token = await context.GetTokenAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                "access_token");
             if (!string.IsNullOrEmpty(token))
             {
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
