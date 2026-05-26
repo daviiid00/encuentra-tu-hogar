@@ -1,22 +1,21 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using EncuentraTuHogar.Frontend.Services;
-using EncuentraTuHogar.Application.DTOs;
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
+using System.Security.Claims;
+using EncuentraTuHogar.Application.Interfaces;
+using EncuentraTuHogar.Domain.Entities;
 
 namespace EncuentraTuHogar.Pages;
 
 [Authorize]
 public class AgendarVisitaModel : PageModel
 {
-    private readonly ApiClient _apiClient;
+    private readonly IVisitRepository _visitRepository;
 
-    public AgendarVisitaModel(ApiClient apiClient)
+    public AgendarVisitaModel(IVisitRepository visitRepository)
     {
-        _apiClient = apiClient;
+        _visitRepository = visitRepository;
     }
 
     [BindProperty]
@@ -37,7 +36,7 @@ public class AgendarVisitaModel : PageModel
         [Display(Name = "Hora")]
         public TimeOnly VisitTime { get; set; }
 
-        // Combina los dos campos en un DateTime para enviar al API
+        // Combina los dos campos en un DateTime para guardar
         public DateTime ScheduledDate =>
             VisitDate.ToDateTime(VisitTime);
     }
@@ -56,26 +55,29 @@ public class AgendarVisitaModel : PageModel
         if (!ModelState.IsValid)
             return Page();
 
+        // Obtener el ID del usuario directamente del claim de la cookie
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+            ModelState.AddModelError(string.Empty, "No se pudo identificar tu usuario. Intenta iniciar sesión de nuevo.");
+            return Page();
+        }
+
         if (Input.ScheduledDate < DateTime.Now)
         {
-            ModelState.AddModelError("Input.ScheduledDate", "La fecha debe ser en el futuro.");
+            ModelState.AddModelError("Input.VisitDate", "La fecha debe ser en el futuro.");
             return Page();
         }
 
         if (!Guid.TryParse(Input.PropertyId, out var propId))
         {
-             ModelState.AddModelError("Input.PropertyId", "El ID de la propiedad no es válido.");
-             return Page();
-        }
-
-        var request = new ScheduleVisitRequest(propId, Input.ScheduledDate);
-        var result = await _apiClient.CreateVisitAsync(request);
-
-        if (result.Visit == null)
-        {
-            ModelState.AddModelError(string.Empty, result.Error ?? "Error al agendar la visita. Intenta nuevamente.");
+            ModelState.AddModelError("Input.PropertyId", "El ID de la propiedad no es válido.");
             return Page();
         }
+
+        // Crear la visita directamente — sin HTTP interno
+        var visit = Visit.Create(propId, userId, Input.ScheduledDate);
+        await _visitRepository.AddAsync(visit);
 
         return RedirectToPage("/Dashboard");
     }

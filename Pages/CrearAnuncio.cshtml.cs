@@ -2,21 +2,20 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using EncuentraTuHogar.Frontend.Services;
-using EncuentraTuHogar.Application.DTOs;
 using System.Security.Claims;
+using EncuentraTuHogar.Application.DTOs;
+using EncuentraTuHogar.Application.Interfaces;
 
 namespace EncuentraTuHogar.Pages;
 
 [Authorize]
 public class CrearAnuncioModel : PageModel
 {
-    private readonly ApiClient _apiClient;
+    private readonly IPropertyService _propertyService;
 
-    public CrearAnuncioModel(ApiClient apiClient)
+    public CrearAnuncioModel(IPropertyService propertyService)
     {
-        _apiClient = apiClient;
+        _propertyService = propertyService;
     }
 
     [BindProperty]
@@ -54,14 +53,20 @@ public class CrearAnuncioModel : PageModel
         public string Description { get; set; }
     }
 
-    public void OnGet()
-    {
-    }
+    public void OnGet() { }
 
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid)
             return Page();
+
+        // Obtener el ID del usuario directamente del claim de la cookie
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+            ModelState.AddModelError(string.Empty, "No se pudo identificar tu usuario. Intenta iniciar sesión de nuevo.");
+            return Page();
+        }
 
         var request = new CreatePropertyRequest(
             $"Propiedad en Medellín",
@@ -80,18 +85,15 @@ public class CrearAnuncioModel : PageModel
             new List<string>()
         );
 
-        var result = await _apiClient.CreatePropertyAsync(request);
+        // Llamar directamente al servicio — sin HTTP interno
+        var result = await _propertyService.CreateAsync(request, userId);
 
-        if (result.Property != null)
-        {
+        if (result is EncuentraTuHogar.Domain.Common.Result<EncuentraTuHogar.Application.DTOs.PropertyDto>.Success)
             return RedirectToPage("/Dashboard");
-        }
-        else
-        {
-            // Parse error if possible, or show generic
-            string errorMsg = result.Error ?? "Hubo un error al crear la propiedad. Verifica que eres propietario y tienes sesión válida.";
-            ModelState.AddModelError(string.Empty, errorMsg);
-            return Page();
-        }
+
+        var error = result is EncuentraTuHogar.Domain.Common.Result<EncuentraTuHogar.Application.DTOs.PropertyDto>.Failure f
+            ? f.Error : "Error al crear la propiedad.";
+        ModelState.AddModelError(string.Empty, error);
+        return Page();
     }
 }
