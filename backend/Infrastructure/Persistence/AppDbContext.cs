@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using EncuentraTuHogar.Domain.Entities;
 using EncuentraTuHogar.Infrastructure.Identity;
 using EncuentraTuHogar.Domain.ValueObjects;
@@ -7,9 +8,12 @@ using System.Text.Json;
 
 namespace EncuentraTuHogar.Infrastructure.Persistence;
 
-public class AppDbContext : IdentityDbContext<ApplicationUser>
+public class AppDbContext : IdentityDbContext<ApplicationUser>, IDataProtectionKeyContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+    // Data Protection keys — persisten entre reinicios/redeploys
+    public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = null!;
 
     public DbSet<Property> Properties { get; set; }
     public DbSet<Visit> Visits { get; set; }

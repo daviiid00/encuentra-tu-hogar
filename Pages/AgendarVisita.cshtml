@@ -75,15 +75,24 @@
 
                 <input type="hidden" asp-for="Input.PropertyId" />
 
-                <div class="form-group" style="margin-bottom:2rem;">
-                    <label asp-for="Input.ScheduledDate" class="form-label">Fecha y hora de la visita</label>
-                    <input asp-for="Input.ScheduledDate"
+                <div class="form-group" style="margin-bottom:1.25rem;">
+                    <label asp-for="Input.VisitDate" class="form-label">Fecha de la visita</label>
+                    <input asp-for="Input.VisitDate"
                            class="form-control"
-                           type="datetime-local"
+                           type="date"
+                           id="input-visit-date" />
+                    <span asp-validation-for="Input.VisitDate" class="form-error"></span>
+                </div>
+
+                <div class="form-group" style="margin-bottom:2rem;">
+                    <label asp-for="Input.VisitTime" class="form-label">Hora de la visita</label>
+                    <input asp-for="Input.VisitTime"
+                           class="form-control"
+                           type="time"
                            step="60"
-                           id="input-scheduled-date" />
+                           id="input-visit-time" />
                     <span class="form-hint">Las visitas suelen ser entre semana de 9am a 6pm o fines de semana.</span>
-                    <span asp-validation-for="Input.ScheduledDate" class="form-error"></span>
+                    <span asp-validation-for="Input.VisitTime" class="form-error"></span>
                 </div>
 
                 <!-- Notice -->
@@ -107,13 +116,16 @@
 </div>
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
     <script>
-        // Set minimum date to today
-        const dateInput = document.getElementById('input-scheduled-date');
+        // Fecha mínima = hoy
+        const dateInput = document.getElementById('input-visit-date');
         if (dateInput) {
-            const now = new Date();
-            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-            dateInput.min = now.toISOString().slice(0, 16);
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            dateInput.min = `${yyyy}-${mm}-${dd}`;
         }
     </script>
 }

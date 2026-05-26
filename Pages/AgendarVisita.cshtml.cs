@@ -27,17 +27,28 @@ public class AgendarVisitaModel : PageModel
         [Required(ErrorMessage = "El ID de la propiedad es requerido para agendar.")]
         public string PropertyId { get; set; }
 
-        [Required(ErrorMessage = "Debe seleccionar una fecha y hora.")]
-        [Display(Name = "Fecha y Hora de Visita")]
-        [DataType(DataType.DateTime)]
-        public DateTime ScheduledDate { get; set; }
+        [Required(ErrorMessage = "Debe seleccionar la fecha de la visita.")]
+        [DataType(DataType.Date)]
+        [Display(Name = "Fecha")]
+        public DateOnly VisitDate { get; set; }
+
+        [Required(ErrorMessage = "Debe seleccionar la hora de la visita.")]
+        [DataType(DataType.Time)]
+        [Display(Name = "Hora")]
+        public TimeOnly VisitTime { get; set; }
+
+        // Combina los dos campos en un DateTime para enviar al API
+        public DateTime ScheduledDate =>
+            VisitDate.ToDateTime(VisitTime);
     }
 
     public void OnGet(string propertyId)
     {
         Input.PropertyId = propertyId;
-        // Default to tomorrow
-        Input.ScheduledDate = DateTime.Now.AddDays(1);
+        // Default: mañana a las 10:00 am (sin segundos)
+        var manana = DateTime.Now.AddDays(1);
+        Input.VisitDate = DateOnly.FromDateTime(manana);
+        Input.VisitTime = new TimeOnly(10, 0);
     }
 
     public async Task<IActionResult> OnPostAsync()

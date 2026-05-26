@@ -5,11 +5,19 @@ using EncuentraTuHogar.Application.UseCases;
 using EncuentraTuHogar.API.Middleware;
 using EncuentraTuHogar.Infrastructure.Extensions;
 using EncuentraTuHogar.Infrastructure.Hubs;
+using Microsoft.AspNetCore.DataProtection;
+using EncuentraTuHogar.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ── Razor Pages (frontend existente — sin modificar) ──────────────────────────
 builder.Services.AddRazorPages();
+
+// ── Data Protection: keys persistidas en la BD para sobrevivir reinicios ───────
+// Sin esto, cada redeploy en Render invalida todas las cookies de sesión
+builder.Services.AddDataProtection()
+    .PersistKeysToDbContext<AppDbContext>()
+    .SetApplicationName("EncuentraTuHogar");
 
 // ── Controladores REST API ────────────────────────────────────────────────────
 builder.Services.AddControllers();
