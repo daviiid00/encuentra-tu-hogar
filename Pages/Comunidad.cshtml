@@ -209,11 +209,20 @@
         });
 
         // ── Render message ──────────────────────────────────
-        connection.on("ReceiveMessage", function (user, message) {
-            appendMessage(user, message);
+        connection.on("ReceiveMessage", function (user, message, serverTime) {
+            appendMessage(user, message, serverTime);
         });
 
-        function appendMessage(user, message) {
+        connection.on("LoadHistory", function (messages) {
+            if (!messages || messages.length === 0) return;
+            
+            // Re-append each message from history without clearing the welcome message
+            messages.forEach(msg => {
+                appendMessage(msg.user, msg.message, msg.timestamp);
+            });
+        });
+
+        function appendMessage(user, message, serverTime) {
             const container = document.getElementById("chatMessages");
             const isMe = isAuth && user === userName;
 
@@ -224,7 +233,7 @@
                 ? user.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase()
                 : '?';
 
-            const time = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+            const time = serverTime || new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
 
             msg.innerHTML = `
                 <div class="msg-avatar" aria-hidden="true">${initials}</div>
