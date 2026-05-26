@@ -5,9 +5,18 @@ namespace EncuentraTuHogar.Infrastructure.Hubs;
 
 public class CommunityChatHub : Hub
 {
-    public async Task SendMessage(string user, string message)
+    public async Task JoinChannel(string channelName)
     {
-        // Broadcast the message to all connected clients
-        await Clients.All.SendAsync("ReceiveMessage", user, message);
+        await Groups.AddToGroupAsync(Context.ConnectionId, channelName);
+    }
+
+    public async Task LeaveChannel(string channelName)
+    {
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, channelName);
+    }
+
+    public async Task SendMessage(string channelName, string user, string message)
+    {
+        await Clients.Group(channelName).SendAsync("ReceiveMessage", user, message);
     }
 }

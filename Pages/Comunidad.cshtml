@@ -151,13 +151,37 @@
             gentrificacion: 'Discusión sobre el impacto del turismo y los precios'
         };
 
+        let currentChannel = 'general';
+
         document.querySelectorAll('.chat-topic').forEach(topic => {
             topic.addEventListener('click', () => {
+                const key = topic.dataset.topic;
+                if (key === currentChannel) return;
+
+                // Leave old channel, join new channel
+                if (connection.state === signalR.HubConnectionState.Connected) {
+                    connection.invoke("LeaveChannel", currentChannel).catch(err => console.error(err));
+                    connection.invoke("JoinChannel", key).catch(err => console.error(err));
+                }
+
+                currentChannel = key;
+
                 document.querySelectorAll('.chat-topic').forEach(t => t.classList.remove('active'));
                 topic.classList.add('active');
-                const key = topic.dataset.topic;
+                
                 document.getElementById('currentTopicTitle').textContent = topicTitles[key] || 'Canal';
                 document.getElementById('currentTopicDesc').textContent = topicDescs[key] || '';
+
+                // Clear messages
+                const messagesContainer = document.getElementById('chatMessages');
+                messagesContainer.innerHTML = `
+                    <div style="text-align:center;padding:1.5rem 0;">
+                        <div style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--primary-light);color:var(--primary);padding:0.4rem 1rem;border-radius:var(--radius-full);font-size:0.8125rem;font-weight:600;">
+                            🏠 Bienvenido al canal ${topicTitles[key] || ''}
+                        </div>
+                        <p style="color:var(--text-muted);font-size:0.8rem;margin-top:0.5rem;">Los mensajes aparecen en tiempo real</p>
+                    </div>
+                `;
             });
         });
 
@@ -228,6 +252,8 @@
         // ── Start connection ────────────────────────────────
         connection.start().then(() => {
             if (indicator) indicator.textContent = 'En línea';
+            // Join the default channel upon connection
+            connection.invoke("JoinChannel", currentChannel).catch(err => console.error(err));
         }).catch(err => {
             console.error(err);
             if (indicator) {
@@ -236,14 +262,13 @@
             }
         });
 
-        // ── Send message ────────────────────────────────────
         function sendMessage() {
             const input = document.getElementById("messageInput");
             if (!input) return;
             const message = input.value.trim();
             if (!message) return;
 
-            connection.invoke("SendMessage", userName, message)
+            connection.invoke("SendMessage", currentChannel, userName, message)
                 .catch(err => console.error(err));
             input.value = '';
             input.focus();
