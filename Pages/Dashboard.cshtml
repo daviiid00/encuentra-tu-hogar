@@ -24,17 +24,31 @@
                 <div class="profile-verified" title="Usuario verificado">✓</div>
             </div>
             <div class="profile-name">@Model.UserFullName</div>
-            <div class="profile-since">Miembro desde 2026</div>
+            <div class="profile-since" style="margin-bottom:0.75rem;">Miembro desde 2026</div>
+
+            <div style="margin-bottom:1.5rem; text-align:center;">
+                @if (Model.IsLandlord)
+                {
+                    <span class="badge badge-green" style="display:inline-flex;">🏡 Propietario</span>
+                }
+                else
+                {
+                    <span class="badge badge-blue" style="display:inline-flex;">🔍 Inquilino</span>
+                }
+            </div>
 
             <div class="profile-stats">
                 <div class="profile-stat">
                     <span class="profile-stat-num">@Model.MisVisitasProgramadas.Count()</span>
                     <span class="profile-stat-label">Visitas</span>
                 </div>
-                <div class="profile-stat">
-                    <span class="profile-stat-num">@Model.MisPropiedades.Count()</span>
-                    <span class="profile-stat-label">Propiedades</span>
-                </div>
+                @if (Model.IsLandlord)
+                {
+                    <div class="profile-stat">
+                        <span class="profile-stat-num">@Model.MisPropiedades.Count()</span>
+                        <span class="profile-stat-label">Propiedades</span>
+                    </div>
+                }
             </div>
 
             <div style="border-top: 1px solid var(--border); padding-top: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem;">
@@ -44,9 +58,12 @@
                 <a href="/Comunidad" class="btn btn-ghost btn-sm" id="btn-ir-comunidad">
                     💬 Ir a la Comunidad
                 </a>
-                <a href="/CrearAnuncio" class="btn btn-outline btn-sm" id="btn-nuevo-anuncio">
-                    + Publicar vivienda
-                </a>
+                @if (Model.IsLandlord)
+                {
+                    <a href="/CrearAnuncio" class="btn btn-outline btn-sm" id="btn-nuevo-anuncio">
+                        + Publicar vivienda
+                    </a>
+                }
             </div>
         </aside>
 
@@ -109,51 +126,53 @@
                     }
                 </div>
             </div>
-
-            <!-- Properties Card -->
-            <div class="dash-card reveal">
-                <div class="dash-card-header">
-                    <h3>
-                        <span style="margin-right:0.5rem;">🏡</span>
-                        Mis Propiedades Publicadas
-                    </h3>
-                    @if (Model.MisPropiedades.Any())
-                    {
-                        <span class="badge badge-green">@Model.MisPropiedades.Count() publicada@(Model.MisPropiedades.Count() != 1 ? "s" : "")</span>
-                    }
-                </div>
-                <div class="dash-card-body">
-                    @if (Model.MisPropiedades.Any())
-                    {
-                        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;">
-                            @foreach (var prop in Model.MisPropiedades)
-                            {
-                                <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--bg-subtle);">
-                                    <div style="height:90px;background:linear-gradient(135deg,var(--bg-muted),var(--primary-light));display:flex;align-items:center;justify-content:center;font-size:2rem;opacity:0.5;">🏠</div>
-                                    <div style="padding:0.875rem;">
-                                        <div style="font-weight:700;font-size:0.875rem;color:var(--text);margin-bottom:0.25rem;">@prop.City, @prop.Neighborhood</div>
-                                        <div style="display:flex;flex-direction:column;gap:0.25rem;margin-bottom:0.625rem;">
-                                            <span class="badge badge-gray">@TranslationHelper.TranslatePropertyType(prop.Type)</span>
-                                            <span class="badge badge-green">@TranslationHelper.TranslateTransactionType(prop.Transaction)</span>
+            @if (Model.IsLandlord)
+            {
+                <!-- Properties Card -->
+                <div class="dash-card reveal">
+                    <div class="dash-card-header">
+                        <h3>
+                            <span style="margin-right:0.5rem;">🏡</span>
+                            Mis Propiedades Publicadas
+                        </h3>
+                        @if (Model.MisPropiedades.Any())
+                        {
+                            <span class="badge badge-green">@Model.MisPropiedades.Count() publicada@(Model.MisPropiedades.Count() != 1 ? "s" : "")</span>
+                        }
+                    </div>
+                    <div class="dash-card-body">
+                        @if (Model.MisPropiedades.Any())
+                        {
+                            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;">
+                                @foreach (var prop in Model.MisPropiedades)
+                                {
+                                    <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--bg-subtle);">
+                                        <div style="height:90px;background:linear-gradient(135deg,var(--bg-muted),var(--primary-light));display:flex;align-items:center;justify-content:center;font-size:2rem;opacity:0.5;">🏠</div>
+                                        <div style="padding:0.875rem;">
+                                            <div style="font-weight:700;font-size:0.875rem;color:var(--text);margin-bottom:0.25rem;">@prop.City, @prop.Neighborhood</div>
+                                            <div style="display:flex;flex-direction:column;gap:0.25rem;margin-bottom:0.625rem;">
+                                                <span class="badge badge-gray">@TranslationHelper.TranslatePropertyType(prop.Type)</span>
+                                                <span class="badge badge-green">@TranslationHelper.TranslateTransactionType(prop.Transaction)</span>
+                                            </div>
+                                            <div style="font-size:1rem;font-weight:800;color:var(--primary);">$@prop.Price.ToString("N0")</div>
                                         </div>
-                                        <div style="font-size:1rem;font-weight:800;color:var(--primary);">$@prop.Price.ToString("N0")</div>
                                     </div>
-                                </div>
-                            }
-                        </div>
-                    }
-                    else
-                    {
-                        <div style="text-align:center;padding:3rem 1rem;color:var(--text-muted);">
-                            <div style="font-size:2.5rem;margin-bottom:1rem;opacity:0.4;">🏡</div>
-                            <p style="font-size:0.9375rem;margin-bottom:1.25rem;color:var(--text-secondary);">Aún no tienes propiedades publicadas.<br>¡Conecta con cientos de inquilinos verificados!</p>
-                            <a href="/CrearAnuncio" class="btn btn-primary" id="btn-publicar-dash">
-                                Publicar mi primera vivienda
-                            </a>
-                        </div>
-                    }
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="text-align:center;padding:3rem 1rem;color:var(--text-muted);">
+                                <div style="font-size:2.5rem;margin-bottom:1rem;opacity:0.4;">🏡</div>
+                                <p style="font-size:0.9375rem;margin-bottom:1.25rem;color:var(--text-secondary);">Aún no tienes propiedades publicadas.<br>¡Conecta con cientos de inquilinos verificados!</p>
+                                <a href="/CrearAnuncio" class="btn btn-primary" id="btn-publicar-dash">
+                                    Publicar mi primera vivienda
+                                </a>
+                            </div>
+                        }
+                    </div>
                 </div>
-            </div>
+            }
 
         </div>
     </div>

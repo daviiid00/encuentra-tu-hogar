@@ -105,9 +105,9 @@ public class PropertyService : IPropertyService
         };
 
         var results = await _repository.FindByFiltersAsync(searchFilter);
-        // Solo propiedades verificadas son visibles públicamente
+        // Solo propiedades verificadas son visibles públicamente, a menos que el filtro sea por un propietario específico (Dashboard)
         return results
-            .Where(p => p.Status == VerificationStatus.Verified)
+            .Where(p => p.Status == VerificationStatus.Verified || (!string.IsNullOrEmpty(filter.OwnerId) && p.OwnerId.Value.ToString() == filter.OwnerId))
             .OrderByDescending(p => p.IsLocalPriority)
             .ThenByDescending(p => p.Views)
             .Select(p => PropertyMapper.ToDto(p));

@@ -8,7 +8,7 @@ using EncuentraTuHogar.Application.Interfaces;
 
 namespace EncuentraTuHogar.Pages;
 
-[Authorize]
+[Authorize(Roles = "Landlord")]
 public class CrearAnuncioModel : PageModel
 {
     private readonly IPropertyService _propertyService;
