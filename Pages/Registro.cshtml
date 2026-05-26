@@ -1,0 +1,156 @@
+@page
+@model EncuentraTuHogar.Pages.RegistroModel
+@{
+    ViewData["Title"] = "Crear Cuenta";
+}
+
+<div class="form-page" style="min-height: calc(100vh - 68px);">
+
+    <!-- Left: Brand panel -->
+    <div class="form-brand-panel">
+        <div style="position:relative;z-index:1;">
+            <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:3rem;">
+                <div class="navbar-logo" style="background:rgba(255,255,255,0.15);">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/>
+                        <path d="M9 21V12h6v9"/>
+                    </svg>
+                </div>
+                <span style="color:white;font-weight:700;font-size:1.0625rem;">Encuentra Tu Hogar</span>
+            </div>
+
+            <p class="brand-quote">Únete a una comunidad que cuida el derecho a la vivienda.</p>
+            <p class="brand-desc">
+                Creamos una plataforma para que los residentes locales de Medellín puedan encontrar y ofrecer vivienda de forma justa, directa y humana.
+            </p>
+
+            <div style="margin-top:2.5rem;display:flex;flex-direction:column;gap:0.75rem;">
+                <div style="display:flex;align-items:center;gap:0.75rem;color:rgba(255,255,255,0.85);font-size:0.9rem;">
+                    <span style="width:28px;height:28px;background:rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;">✓</span>
+                    Registro 100% gratuito
+                </div>
+                <div style="display:flex;align-items:center;gap:0.75rem;color:rgba(255,255,255,0.85);font-size:0.9rem;">
+                    <span style="width:28px;height:28px;background:rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;">✓</span>
+                    Sin comisiones ni intermediarios
+                </div>
+                <div style="display:flex;align-items:center;gap:0.75rem;color:rgba(255,255,255,0.85);font-size:0.9rem;">
+                    <span style="width:28px;height:28px;background:rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;">✓</span>
+                    Acceso a la comunidad y al chat
+                </div>
+                <div style="display:flex;align-items:center;gap:0.75rem;color:rgba(255,255,255,0.85);font-size:0.9rem;">
+                    <span style="width:28px;height:28px;background:rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;">✓</span>
+                    Prioridad para residentes locales
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right: Registration form -->
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:clamp(2rem,5vw,4rem);overflow-y:auto;">
+        <div class="form-container">
+
+            <h1 class="form-title">Crea tu cuenta</h1>
+            <p class="form-subtitle">Es gratis y solo toma un minuto.</p>
+
+            <form method="post" id="registroForm">
+                <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+                <!-- Role selector -->
+                <div style="margin-bottom:1.5rem;">
+                    <p class="form-label" style="margin-bottom:0.75rem;">¿Cómo vas a usar la plataforma?</p>
+                    <div class="role-toggle" id="roleToggle">
+                        <label class="role-option selected" for="roleInquilino">
+                            <input type="radio" id="roleInquilino" name="_roleDisplay" value="inquilino" checked>
+                            <div class="role-icon">🔍</div>
+                            <div class="role-name">Busco vivienda</div>
+                            <div class="role-desc">Quiero arrendar</div>
+                        </label>
+                        <label class="role-option" for="rolePropietario">
+                            <input type="radio" id="rolePropietario" name="_roleDisplay" value="propietario">
+                            <div class="role-icon">🏡</div>
+                            <div class="role-name">Tengo vivienda</div>
+                            <div class="role-desc">Quiero arrendar</div>
+                        </label>
+                    </div>
+                    <input asp-for="Input.IsOwner" type="hidden" id="isOwnerInput" value="false" />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.FullName" class="form-label">Nombre completo</label>
+                    <input asp-for="Input.FullName"
+                           class="form-control"
+                           placeholder="Tu nombre completo"
+                           autocomplete="name"
+                           id="input-fullname" />
+                    <span asp-validation-for="Input.FullName" class="form-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.Email" class="form-label">Correo electrónico</label>
+                    <input asp-for="Input.Email"
+                           class="form-control"
+                           type="email"
+                           placeholder="tu@correo.com"
+                           autocomplete="email"
+                           id="input-email-reg" />
+                    <span asp-validation-for="Input.Email" class="form-error"></span>
+                </div>
+
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label asp-for="Input.Password" class="form-label">Contraseña</label>
+                        <input asp-for="Input.Password"
+                               class="form-control"
+                               type="password"
+                               placeholder="••••••••"
+                               autocomplete="new-password"
+                               id="input-password-reg" />
+                        <span asp-validation-for="Input.Password" class="form-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.ConfirmPassword" class="form-label">Confirmar</label>
+                        <input asp-for="Input.ConfirmPassword"
+                               class="form-control"
+                               type="password"
+                               placeholder="••••••••"
+                               autocomplete="new-password"
+                               id="input-confirm-password" />
+                        <span asp-validation-for="Input.ConfirmPassword" class="form-error"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg btn-full" id="btn-registro" style="margin-top:0.5rem;">
+                    Crear mi cuenta gratis
+                </button>
+            </form>
+
+            <div class="form-divider">ya tienes cuenta?</div>
+
+            <div class="form-footer">
+                <p><a href="/Login" id="link-login">Iniciar sesión →</a></p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Role toggle
+        const roleOptions = document.querySelectorAll('#roleToggle .role-option');
+        const isOwnerInput = document.getElementById('isOwnerInput');
+
+        roleOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                roleOptions.forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+                const radio = option.querySelector('input[type="radio"]');
+                if (radio) {
+                    radio.checked = true;
+                    isOwnerInput.value = radio.value === 'propietario' ? 'true' : 'false';
+                }
+            });
+        });
+    </script>
+}

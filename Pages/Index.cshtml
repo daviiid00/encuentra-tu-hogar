@@ -1,0 +1,338 @@
+@page
+@using EncuentraTuHogar.Frontend.Helpers
+@model IndexModel
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<!-- ── HERO ──────────────────────────────────────────────── -->
+<section class="hero" id="inicio">
+    <div class="hero-inner">
+
+        <span class="hero-eyebrow reveal">
+            <span class="dot"></span>
+            Medellín · Plataforma comunitaria de vivienda
+        </span>
+
+        <h1 class="hero-headline reveal reveal-delay-1">
+            Tu próximo hogar<br>
+            <span class="highlight">está en tu comunidad</span>
+        </h1>
+
+        <p class="hero-sub reveal reveal-delay-2">
+            Conectamos a personas con espacios reales, directamente y sin intermediarios.
+            Porque encontrar donde vivir debería ser humano, seguro y justo.
+        </p>
+
+        <!-- Search Bar -->
+        <form method="get" action="/#propiedades" class="hero-search reveal reveal-delay-2">
+            <div class="search-field">
+                <label class="search-label">Barrio / Zona</label>
+                <select asp-for="Neighborhood" class="search-input" id="search-neighborhood">
+                    <option value="">Toda la ciudad</option>
+                    <option value="El Poblado">El Poblado</option>
+                    <option value="Laureles">Laureles</option>
+                    <option value="Belén">Belén</option>
+                    <option value="Estadio">Estadio</option>
+                    <option value="Robledo">Robledo</option>
+                    <option value="Castilla">Castilla</option>
+                    <option value="Aranjuez">Aranjuez</option>
+                    <option value="Buenos Aires">Buenos Aires</option>
+                </select>
+            </div>
+            <div class="search-field">
+                <label for="propertyType">Tipo de vivienda</label>
+                <select id="propertyType" name="PropertyType" asp-for="PropertyType">
+                    <option value="">Todos los tipos</option>
+                    <option value="1">Apartamento</option>
+                    <option value="2">Casa</option>
+                    <option value="3">Estudio</option>
+                </select>
+            </div>
+            <div class="search-field">
+                <label for="priceRange">Rango de precio</label>
+                <select id="priceRange" name="PriceRange" asp-for="PriceRange">
+                    <option value="">Cualquier precio</option>
+                    <option value="low">Hasta $1.5M</option>
+                    <option value="medium">$1.5M – $3M</option>
+                    <option value="high">Más de $3M</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg" id="btn-buscar">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                Buscar
+            </button>
+        </form>
+
+        <!-- Trust signals -->
+        <div class="hero-trust reveal reveal-delay-3">
+            <span class="trust-item">
+                <svg class="trust-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                Verificación de usuarios
+            </span>
+            <span class="trust-sep"></span>
+            <span class="trust-item">
+                <svg class="trust-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+                Contacto directo con propietarios
+            </span>
+            <span class="trust-sep"></span>
+            <span class="trust-item">
+                <svg class="trust-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
+                </svg>
+                Comunidad activa de residentes
+            </span>
+        </div>
+
+    </div>
+</section>
+
+<!-- ── STATS BAR ─────────────────────────────────────────── -->
+<div class="stats-bar">
+    <div class="container">
+        <div class="stat-item reveal">
+            <span class="stat-number" data-counter="247" data-suffix="+">247+</span>
+            <span class="stat-label">Propiedades activas</span>
+        </div>
+        <div class="stat-item reveal reveal-delay-1">
+            <span class="stat-number" data-counter="1800" data-suffix="+">1.800+</span>
+            <span class="stat-label">Usuarios en la comunidad</span>
+        </div>
+        <div class="stat-item reveal reveal-delay-2">
+            <span class="stat-number" data-counter="5">5</span>
+            <span class="stat-label">Ciudades conectadas</span>
+        </div>
+    </div>
+</div>
+
+<!-- ── CÓMO FUNCIONA ──────────────────────────────────────── -->
+<section class="section-pad" id="como-funciona" style="background: var(--bg-section);">
+    <div class="container">
+        <div class="section-header text-center reveal">
+            <span class="section-eyebrow">Simple y directo</span>
+            <h2 class="section-title">¿Cómo funciona?</h2>
+            <p class="section-desc" style="margin: 0 auto;">Sin agencias, sin trámites complicados. Conectamos personas con hogares de forma directa, transparente y segura.</p>
+        </div>
+
+        <div class="features-grid">
+            <a href="/#propiedades" class="feature-card reveal reveal-delay-1">
+                <div class="feature-icon-wrap">🔍</div>
+                <div class="feature-number">Paso 01</div>
+                <h3>Explora propiedades</h3>
+                <p>Usa los filtros de búsqueda para encontrar opciones en minutos. Sin registrarte, sin complicaciones.</p>
+            </a>
+            <a href="/Registro" class="feature-card reveal reveal-delay-2">
+                <div class="feature-icon-wrap">✅</div>
+                <div class="feature-number">Paso 02</div>
+                <h3>Verifica tu cuenta</h3>
+                <p>Crea un perfil en segundos. La verificación genera confianza con propietarios e inquilinos.</p>
+            </a>
+            <a href="/Comunidad" class="feature-card reveal reveal-delay-3">
+                <div class="feature-icon-wrap">🤝</div>
+                <div class="feature-number">Paso 03</div>
+                <h3>Conecta con la comunidad</h3>
+                <p>Habla directamente, comparte experiencias y agenda tu visita. Trato humano, no corporativo.</p>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ── PROPIEDADES ────────────────────────────────────────── -->
+<section class="section-pad" id="propiedades">
+    <div class="container">
+        <div class="section-header reveal" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+            <div>
+                <span class="section-eyebrow">Disponibles ahora</span>
+                <h2 class="section-title" style="margin-bottom:0;">Propiedades Destacadas</h2>
+            </div>
+            @if (Model.Properties != null && Model.Properties.Any())
+            {
+                <a href="/" class="btn btn-ghost" id="btn-ver-todas">Ver todas</a>
+            }
+        </div>
+
+        @if (Model.Properties != null && Model.Properties.Any())
+        {
+            <div class="properties-grid">
+                @{int propIdx = 0;}
+                @foreach (var prop in Model.Properties)
+                {
+                    string delayClass = propIdx % 3 == 0 ? "" : propIdx % 3 == 1 ? "reveal-delay-1" : "reveal-delay-2";
+                    string typeLabel = TranslationHelper.TranslatePropertyType(prop.Type);
+                    string transLabel = TranslationHelper.TranslateTransactionType(prop.Transaction);
+                    <div class="property-card reveal @delayClass">
+                        <div class="property-img-wrap">
+                            @if (prop.ImageUrls != null && prop.ImageUrls.Any())
+                            {
+                                <img src="@prop.ImageUrls.First()" alt="@prop.Title" style="width:100%; height:100%; object-fit:cover;" />
+                            }
+                            else
+                            {
+                                <div class="property-img-placeholder">🏠</div>
+                            }
+                            <span class="property-type-badge">@typeLabel</span>
+                        </div>
+                        <div class="property-body">
+                            <h3 class="property-title">@prop.Title</h3>
+                            <div class="property-location">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                @prop.City, @prop.Neighborhood
+                            </div>
+                            <div class="property-meta">
+                                <span class="badge badge-green">@transLabel</span>
+                                <span class="badge badge-gray">Verificado</span>
+                            </div>
+                            <div class="property-price">
+                                $@prop.Price.ToString("N0")
+                                <span>/mes</span>
+                            </div>
+                        </div>
+                        <div class="property-footer">
+                            <a href="/AgendarVisita?propertyId=@prop.Id" class="btn btn-primary" id="btn-visita-@prop.Id">
+                                Agendar Visita
+                            </a>
+                        </div>
+                    </div>
+                    propIdx++;
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state reveal">
+                <div class="empty-state-icon">🔍</div>
+                <h3>No encontramos propiedades</h3>
+                <p>No hay propiedades que coincidan con tu búsqueda. Intenta cambiar los filtros o vuelve más tarde.</p>
+                <a href="/" class="btn btn-primary" id="btn-limpiar-filtros">Limpiar Filtros</a>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- ── OWNER BANNER ───────────────────────────────────────── -->
+<section class="section-pad" style="background: var(--bg-subtle);">
+    <div class="container">
+        <div class="owner-banner reveal">
+            <div class="owner-content">
+                <span class="badge" style="background:rgba(255,255,255,0.15);color:white;margin-bottom:1.5rem;">🏡 Para propietarios</span>
+                <h2>¿Tienes una vivienda disponible?</h2>
+                <ul class="owner-list">
+                    <li>
+                        <span class="owner-list-check">✓</span>
+                        Publica gratis tu propiedad en minutos
+                    </li>
+                    <li>
+                        <span class="owner-list-check">✓</span>
+                        Llega a cientos de inquilinos verificados
+                    </li>
+                    <li>
+                        <span class="owner-list-check">✓</span>
+                        Gestiona visitas sin intermediarios
+                    </li>
+                    <li>
+                        <span class="owner-list-check">✓</span>
+                        Prioridad para residentes locales de Medellín
+                    </li>
+                </ul>
+                <a href="/CrearAnuncio" class="btn btn-lg" id="btn-publicar" style="background:white;color:var(--primary);border-color:white;font-weight:700;">
+                    Publicar mi vivienda
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                </a>
+            </div>
+            <div class="owner-visual">🏠</div>
+        </div>
+    </div>
+</section>
+
+<!-- ── TESTIMONIOS ────────────────────────────────────────── -->
+<section class="section-pad" id="experiencias">
+    <div class="container">
+        <div class="section-header text-center reveal">
+            <span class="section-eyebrow">Historias reales</span>
+            <h2 class="section-title">Experiencias de nuestra comunidad</h2>
+            <p class="section-desc" style="margin: 0 auto;">Personas reales que encontraron su hogar — y su comunidad — aquí.</p>
+        </div>
+
+        <div class="testimonials-grid">
+            <div class="testimonial-card reveal reveal-delay-1">
+                <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                <p class="testimonial-quote">"Encontré rápido un lugar seguro. Me sentí acompañada en todo el proceso."</p>
+                <p class="testimonial-text">Llevaba dos meses buscando y en todas partes pedían fianza enorme o referencias imposibles de conseguir. Aquí en una semana tenía mi apartamento.</p>
+                <div class="testimonial-author">
+                    <div class="t-avatar-fallback">AG</div>
+                    <div>
+                        <div class="t-name">Ana G.</div>
+                        <div class="t-role">Inquilina · Medellín</div>
+                    </div>
+                    <span class="t-verified" title="Usuario verificado">✓</span>
+                </div>
+            </div>
+
+            <div class="testimonial-card reveal reveal-delay-2">
+                <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                <p class="testimonial-quote">"Conseguí un departamento en pocos días. Todo fue simple y claro."</p>
+                <p class="testimonial-text">No tuve que pagar comisiones extra exageradas ni hablar con intermediarios. Directo con el propietario, acordamos todo de manera transparente. Muy recomendado.</p>
+                <div class="testimonial-author">
+                    <div class="t-avatar-fallback">CM</div>
+                    <div>
+                        <div class="t-name">Carlos M.</div>
+                        <div class="t-role">Inquilino · Envigado</div>
+                    </div>
+                    <span class="t-verified" title="Usuario verificado">✓</span>
+                </div>
+            </div>
+
+            <div class="testimonial-card reveal reveal-delay-1">
+                <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                <p class="testimonial-quote">"En menos de una semana ya tenía inquilinos verificados."</p>
+                <p class="testimonial-text">Como propietaria, me encantó la facilidad para publicar. La plataforma selecciona perfiles verificados y me ahorró tiempo y preocupaciones.</p>
+                <div class="testimonial-author">
+                    <div class="t-avatar-fallback">LV</div>
+                    <div>
+                        <div class="t-name">Laura V.</div>
+                        <div class="t-role">Propietaria · Laureles</div>
+                    </div>
+                    <span class="t-verified" title="Usuario verificado">✓</span>
+                </div>
+            </div>
+
+            <div class="testimonial-card reveal reveal-delay-2">
+                <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                <p class="testimonial-quote">"Trato directo y seguro. 100% recomendado."</p>
+                <p class="testimonial-text">La plataforma es muy intuitiva y me ahorró dolores de cabeza con inmobiliarias. El sistema de verificación da mucha confianza a ambas partes.</p>
+                <div class="testimonial-author">
+                    <div class="t-avatar-fallback">ER</div>
+                    <div>
+                        <div class="t-name">Esteban R.</div>
+                        <div class="t-role">Inquilino · El Poblado</div>
+                    </div>
+                    <span class="t-verified" title="Usuario verificado">✓</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── CTA FINAL ──────────────────────────────────────────── -->
+<section class="section-pad-sm" style="background: var(--bg-section); border-top: 1px solid var(--border);">
+    <div class="container text-center reveal">
+        <h2 class="section-title" style="margin-bottom:0.75rem;">¿Listo para encontrar tu hogar?</h2>
+        <p style="color:var(--text-secondary);margin-bottom:2rem;font-size:1.0625rem;">Únete a más de 1.800 personas que ya forman parte de nuestra comunidad.</p>
+        <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+            <a href="/Registro" class="btn btn-primary btn-lg" id="btn-cta-registro">Crear cuenta gratis</a>
+            <a href="/#propiedades" class="btn btn-outline btn-lg" id="btn-cta-explorar">Explorar propiedades</a>
+        </div>
+    </div>
+</section>

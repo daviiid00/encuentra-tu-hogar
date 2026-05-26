@@ -1,0 +1,261 @@
+@page
+@model EncuentraTuHogar.Pages.ComunidadModel
+@{
+    ViewData["Title"] = "Comunidad";
+}
+
+<div style="max-width: var(--container); margin: 2rem auto; padding: 0 var(--container-pad);">
+
+    <!-- Page Header -->
+    <div class="reveal" style="margin-bottom: 2rem;">
+        <span class="section-eyebrow">Chat en tiempo real</span>
+        <h1 class="section-title" style="margin-bottom:0.5rem;">Comunidad Encuentra Tu Hogar</h1>
+        <p style="color:var(--text-secondary);font-size:0.9375rem;">
+            Un espacio seguro para compartir experiencias, hacer preguntas y conectar con tu comunidad.
+        </p>
+    </div>
+
+    <!-- Chat Layout -->
+    <div class="chat-wrapper reveal">
+
+        <!-- Sidebar -->
+        <aside class="chat-sidebar">
+            <div class="chat-sidebar-header">
+                <h3>Canales</h3>
+                <div class="chat-online-dot" id="onlineIndicator">Conectando...</div>
+            </div>
+            <nav class="chat-topics">
+                <div class="chat-topic active" data-topic="general">
+                    <span class="chat-topic-icon">💬</span>
+                    General
+                </div>
+                <div class="chat-topic" data-topic="arriendos">
+                    <span class="chat-topic-icon">🏠</span>
+                    Arriendos
+                </div>
+                <div class="chat-topic" data-topic="barrios">
+                    <span class="chat-topic-icon">📍</span>
+                    Barrios
+                </div>
+                <div class="chat-topic" data-topic="consejos">
+                    <span class="chat-topic-icon">💡</span>
+                    Consejos
+                </div>
+                <div class="chat-topic" data-topic="gentrificacion">
+                    <span class="chat-topic-icon">📢</span>
+                    Gentrificación
+                </div>
+            </nav>
+
+            <!-- Community tips -->
+            <div style="padding: 1rem; border-top: 1px solid var(--border); margin-top: auto;">
+                <p style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.5;">
+                    💚 <strong style="color:var(--text-secondary);">Comunidad Activa</strong><br>
+                    Sé respetuoso y comparte información útil para otros residentes.
+                </p>
+            </div>
+        </aside>
+
+        <!-- Main chat -->
+        <div class="chat-main">
+            <!-- Chat header -->
+            <div class="chat-main-header">
+                <div style="width:36px;height:36px;background:var(--primary-light);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">💬</div>
+                <div>
+                    <h4 id="currentTopicTitle">Canal General</h4>
+                    <p id="currentTopicDesc">Conversación abierta para toda la comunidad</p>
+                </div>
+            </div>
+
+            <!-- Messages area -->
+            <div id="chatMessages" class="chat-messages" aria-live="polite" aria-label="Mensajes del chat">
+                <!-- Welcome message -->
+                <div style="text-align:center;padding:1.5rem 0;">
+                    <div style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--primary-light);color:var(--primary);padding:0.4rem 1rem;border-radius:var(--radius-full);font-size:0.8125rem;font-weight:600;">
+                        🏠 Bienvenido a la comunidad
+                    </div>
+                    <p style="color:var(--text-muted);font-size:0.8rem;margin-top:0.5rem;">Los mensajes aparecen en tiempo real</p>
+                </div>
+            </div>
+
+            <!-- Input area / Login prompt -->
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <div class="chat-input-area" id="chatInputArea">
+                    <input type="text"
+                           id="messageInput"
+                           placeholder="Escribe un mensaje para la comunidad..."
+                           maxlength="500"
+                           autocomplete="off"
+                           aria-label="Mensaje" />
+                    <button id="sendButton" class="chat-send-btn" title="Enviar" aria-label="Enviar mensaje">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                        </svg>
+                    </button>
+                </div>
+            }
+            else
+            {
+                <div class="chat-login-prompt">
+                    <p>Para participar en la comunidad necesitas iniciar sesión.</p>
+                    <a href="/Login" class="btn btn-primary btn-sm" id="btn-login-chat">
+                        Iniciar sesión para chatear
+                    </a>
+                </div>
+            }
+        </div>
+
+    </div>
+
+    <!-- Community Info Cards -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem;margin-top:2rem;">
+        <div class="card reveal reveal-delay-1" style="text-align:center;">
+            <div style="font-size:2rem;margin-bottom:0.75rem;">🤝</div>
+            <h3 style="font-size:0.9375rem;margin-bottom:0.35rem;">Comunidad verificada</h3>
+            <p style="font-size:0.8125rem;color:var(--text-secondary);">Todos los usuarios pasan por verificación antes de participar.</p>
+        </div>
+        <div class="card reveal reveal-delay-2" style="text-align:center;">
+            <div style="font-size:2rem;margin-bottom:0.75rem;">🔒</div>
+            <h3 style="font-size:0.9375rem;margin-bottom:0.35rem;">Espacio seguro</h3>
+            <p style="font-size:0.8125rem;color:var(--text-secondary);">Moderación activa. Cero tolerancia a fraudes o contenido ofensivo.</p>
+        </div>
+        <div class="card reveal reveal-delay-3" style="text-align:center;">
+            <div style="font-size:2rem;margin-bottom:0.75rem;">📍</div>
+            <h3 style="font-size:0.9375rem;margin-bottom:0.35rem;">Local primero</h3>
+            <p style="font-size:0.8125rem;color:var(--text-secondary);">Priorizamos a residentes de Medellín y sus barrios históricos.</p>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <script>
+        const userName = '@(User.Identity?.Name ?? "")';
+        const isAuth = @(User.Identity?.IsAuthenticated == true ? "true" : "false");
+
+        // ── Topic selector ──────────────────────────────────
+        const topicTitles = {
+            general: 'Canal General',
+            arriendos: 'Arriendos y Precios',
+            barrios: 'Barrios y Zonas',
+            consejos: 'Consejos para Arrendar',
+            gentrificacion: 'Gentrificación en Medellín'
+        };
+        const topicDescs = {
+            general: 'Conversación abierta para toda la comunidad',
+            arriendos: 'Precios, negociaciones y dudas sobre arriendos',
+            barrios: 'Recomendaciones de barrios y zonas de la ciudad',
+            consejos: 'Tips y experiencias para encontrar tu hogar',
+            gentrificacion: 'Discusión sobre el impacto del turismo y los precios'
+        };
+
+        document.querySelectorAll('.chat-topic').forEach(topic => {
+            topic.addEventListener('click', () => {
+                document.querySelectorAll('.chat-topic').forEach(t => t.classList.remove('active'));
+                topic.classList.add('active');
+                const key = topic.dataset.topic;
+                document.getElementById('currentTopicTitle').textContent = topicTitles[key] || 'Canal';
+                document.getElementById('currentTopicDesc').textContent = topicDescs[key] || '';
+            });
+        });
+
+        // ── SignalR connection ──────────────────────────────
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/communityChatHub")
+            .withAutomaticReconnect()
+            .build();
+
+        const indicator = document.getElementById('onlineIndicator');
+
+        connection.onreconnecting(() => {
+            if (indicator) indicator.textContent = 'Reconectando...';
+        });
+
+        connection.onreconnected(() => {
+            if (indicator) indicator.textContent = 'En línea';
+        });
+
+        connection.onclose(() => {
+            if (indicator) {
+                indicator.textContent = 'Desconectado';
+                indicator.style.color = 'var(--error)';
+            }
+        });
+
+        // ── Render message ──────────────────────────────────
+        connection.on("ReceiveMessage", function (user, message) {
+            appendMessage(user, message);
+        });
+
+        function appendMessage(user, message) {
+            const container = document.getElementById("chatMessages");
+            const isMe = isAuth && user === userName;
+
+            const msg = document.createElement("div");
+            msg.className = "chat-msg" + (isMe ? " me" : "");
+
+            const initials = user
+                ? user.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase()
+                : '?';
+
+            const time = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+
+            msg.innerHTML = `
+                <div class="msg-avatar" aria-hidden="true">${initials}</div>
+                <div>
+                    <div class="msg-bubble">
+                        ${!isMe ? `<div class="msg-name">${escapeHtml(user)}</div>` : ''}
+                        <div class="msg-text">${escapeHtml(message)}</div>
+                        <div class="msg-time">${time}</div>
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(msg);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        // ── Start connection ────────────────────────────────
+        connection.start().then(() => {
+            if (indicator) indicator.textContent = 'En línea';
+        }).catch(err => {
+            console.error(err);
+            if (indicator) {
+                indicator.textContent = 'Sin conexión';
+                indicator.style.color = 'var(--error)';
+            }
+        });
+
+        // ── Send message ────────────────────────────────────
+        function sendMessage() {
+            const input = document.getElementById("messageInput");
+            if (!input) return;
+            const message = input.value.trim();
+            if (!message) return;
+
+            connection.invoke("SendMessage", userName, message)
+                .catch(err => console.error(err));
+            input.value = '';
+            input.focus();
+        }
+
+        document.getElementById("sendButton")?.addEventListener("click", sendMessage);
+
+        document.getElementById("messageInput")?.addEventListener("keypress", (e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    </script>
+}

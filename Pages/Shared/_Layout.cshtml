@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Encuentra Tu Hogar — La plataforma comunitaria de vivienda que prioriza a los residentes locales de Medellín. Arriendo directo, seguro y sin intermediarios." />
+    <title>@ViewData["Title"] - Encuentra Tu Hogar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+
+    <!-- ── Navbar ── -->
+    <header>
+        <nav class="navbar" id="mainNav">
+            <div class="navbar-inner">
+
+                <!-- Brand -->
+                <a href="/" class="navbar-brand">
+                    <div class="navbar-logo">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/>
+                            <path d="M9 21V12h6v9"/>
+                        </svg>
+                    </div>
+                    <span class="navbar-brand-text">Encuentra<span> Tu Hogar</span></span>
+                </a>
+
+                <!-- Desktop Nav Links -->
+                <ul class="nav-links" role="list">
+                    <li><a href="/" id="nav-inicio">Inicio</a></li>
+                    <li><a href="/#como-funciona" id="nav-como">Cómo Funciona</a></li>
+                    <li><a href="/#experiencias" id="nav-exp">Experiencias</a></li>
+                    <li><a href="/Comunidad" id="nav-comunidad">Comunidad</a></li>
+                </ul>
+
+                <!-- Desktop Actions -->
+                <div class="nav-actions">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <a href="/Dashboard" class="nav-user" id="nav-dashboard">
+                            <div class="nav-avatar" aria-hidden="true">
+                                @(User.Identity.Name?.Substring(0, 1).ToUpper() ?? "U")
+                            </div>
+                            <span class="nav-user-name">@User.Identity.Name</span>
+                        </a>
+                        <form method="post" asp-page="/Logout" style="display:inline;">
+                            <button type="submit" class="btn btn-ghost btn-sm" id="btn-logout">Salir</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a href="/Login" class="btn btn-ghost btn-sm" id="btn-login">Ingresar</a>
+                        <a href="/Registro" class="btn btn-primary btn-sm" id="btn-registro">Registrarse</a>
+                    }
+                </div>
+
+                <!-- Hamburger mobile -->
+                <button class="nav-hamburger" id="navHamburger" aria-label="Abrir menú" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+            </div>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <nav class="nav-mobile" id="navMobile" aria-label="Menú móvil">
+            <a href="/">Inicio</a>
+            <a href="/#como-funciona">Cómo Funciona</a>
+            <a href="/#experiencias">Experiencias</a>
+            <a href="/Comunidad">Comunidad</a>
+            <div class="nav-divider"></div>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a href="/Dashboard">Mi Perfil — @User.Identity.Name</a>
+                <form method="post" asp-page="/Logout">
+                    <button type="submit" class="btn btn-ghost btn-sm btn-full">Cerrar Sesión</button>
+                </form>
+            }
+            else
+            {
+                <a href="/Login" class="btn btn-ghost btn-sm">Ingresar</a>
+                <a href="/Registro" class="btn btn-primary btn-sm">Registrarse</a>
+            }
+        </nav>
+    </header>
+
+    <!-- ── Page Content ── -->
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <!-- ── WhatsApp FAB ── -->
+    <a href="https://wa.me/573000000000?text=Hola,%20quisiera%20saber%20más%20sobre%20Encuentra%20Tu%20Hogar"
+       target="_blank"
+       class="chat-fab"
+       aria-label="Chat de soporte"
+       title="Chatea con nosotros">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+    </a>
+
+    <!-- ── Footer ── -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <!-- Brand col -->
+                <div class="footer-brand">
+                    <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.75rem;">
+                        <div class="navbar-logo" style="background:rgba(255,255,255,0.1);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/>
+                                <path d="M9 21V12h6v9"/>
+                            </svg>
+                        </div>
+                        <span class="brand-name">Encuentra Tu Hogar</span>
+                    </div>
+                    <p class="footer-tagline">Una plataforma comunitaria de vivienda que prioriza a los residentes locales de Medellín. Nació para frenar la gentrificación y fortalecer la estabilidad barrial.</p>
+                </div>
+
+                <!-- Links col -->
+                <div class="footer-col">
+                    <h4>Plataforma</h4>
+                    <nav class="footer-links">
+                        <a href="/">Inicio</a>
+                        <a href="/#como-funciona">Cómo Funciona</a>
+                        <a href="/Comunidad">Comunidad</a>
+                        <a href="/CrearAnuncio">Publicar Vivienda</a>
+                    </nav>
+                </div>
+
+                <!-- Legal col -->
+                <div class="footer-col">
+                    <h4>Comunidad</h4>
+                    <nav class="footer-links">
+                        <a href="/#experiencias">Experiencias</a>
+                        <a href="/Registro">Crear Cuenta</a>
+                        <a href="/Login">Iniciar Sesión</a>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2026 Encuentra Tu Hogar — Proyecto académico UPB · Pensamiento Creativo · Medellín, Colombia</p>
+                <div class="footer-social">
+                    <a href="#" class="social-link" aria-label="Instagram">📸</a>
+                    <a href="#" class="social-link" aria-label="Twitter">🐦</a>
+                    <a href="#" class="social-link" aria-label="LinkedIn">💼</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

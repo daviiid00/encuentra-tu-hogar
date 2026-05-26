@@ -1,0 +1,104 @@
+@page
+@model EncuentraTuHogar.Pages.LoginModel
+@{
+    ViewData["Title"] = "Iniciar Sesión";
+}
+
+<div class="form-page" style="min-height: calc(100vh - 68px);">
+
+    <!-- Left: Brand panel -->
+    <div class="form-brand-panel">
+        <div style="position:relative;z-index:1;">
+            <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:3rem;">
+                <div class="navbar-logo" style="background:rgba(255,255,255,0.15);">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/>
+                        <path d="M9 21V12h6v9"/>
+                    </svg>
+                </div>
+                <span style="color:white;font-weight:700;font-size:1.0625rem;">Encuentra Tu Hogar</span>
+            </div>
+
+            <p class="brand-quote">
+                "El hogar que buscas está en tu comunidad."
+            </p>
+            <p class="brand-desc">
+                Una plataforma que conecta personas con espacios reales, sin intermediarios y con la confianza que mereces.
+            </p>
+
+            <div class="brand-stats">
+                <div class="brand-stat">
+                    <span class="brand-stat-num">247+</span>
+                    <span class="brand-stat-label">Propiedades</span>
+                </div>
+                <div class="brand-stat">
+                    <span class="brand-stat-num">1.8k</span>
+                    <span class="brand-stat-label">Usuarios</span>
+                </div>
+                <div class="brand-stat">
+                    <span class="brand-stat-num">100%</span>
+                    <span class="brand-stat-label">Verificados</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right: Login form -->
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:clamp(2rem,5vw,4rem);">
+        <div class="form-container">
+
+            <h1 class="form-title">Bienvenido de nuevo</h1>
+            <p class="form-subtitle">Ingresa a tu cuenta para continuar.</p>
+
+            <form method="post" id="loginForm">
+                <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+                <div class="form-group">
+                    <label asp-for="Input.Email" class="form-label">Correo electrónico</label>
+                    <input asp-for="Input.Email"
+                           class="form-control"
+                           type="email"
+                           placeholder="tu@correo.com"
+                           autocomplete="email"
+                           id="input-email" />
+                    <span asp-validation-for="Input.Email" class="form-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.Password" class="form-label">Contraseña</label>
+                    <input asp-for="Input.Password"
+                           class="form-control"
+                           type="password"
+                           placeholder="••••••••"
+                           autocomplete="current-password"
+                           id="input-password" />
+                    <span asp-validation-for="Input.Password" class="form-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-check">
+                        <input asp-for="Input.RememberMe" type="checkbox" id="input-remember" />
+                        <label asp-for="Input.RememberMe" style="margin:0;font-size:0.9rem;color:var(--text-secondary);cursor:pointer;">
+                            Mantener sesión iniciada
+                        </label>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg btn-full" id="btn-login" style="margin-top:0.5rem;">
+                    Ingresar a mi cuenta
+                </button>
+            </form>
+
+            <div class="form-divider">o</div>
+
+            <div class="form-footer">
+                <p>¿No tienes cuenta? <a href="/Registro" id="link-registro">Regístrate gratis →</a></p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

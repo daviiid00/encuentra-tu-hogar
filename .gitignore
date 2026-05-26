@@ -1,0 +1,60 @@
+## -----------------------------------------------
+## .gitignore para proyecto ASP.NET Core / C#
+## -----------------------------------------------
+
+# Build output
+[Bb]in/
+[Oo]bj/
+out/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.VC.db
+*.VC.opendb
+
+# Logs & runtime files
+*.log
+*.tmp
+*.temp
+npm-debug.log*
+
+# SQLite databases (archivos de runtime, no de migración)
+*.db
+*.db-shm
+*.db-wal
+
+# Publicación / deployment
+publish/
+**/publish/
+
+# dotnet tool manifests local overrides
+.config/dotnet-tools.json
+
+# Environment / secrets
+.env
+.env.*
+appsettings.Local.json
+secrets.json
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Node (si se usa)
+node_modules/

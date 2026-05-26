@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: encuentra-tu-hogar
+    env: docker
+    region: ohio
+    plan: free
+    dockerContext: .
+    dockerfilePath: ./docker/Dockerfile
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
