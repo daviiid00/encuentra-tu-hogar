@@ -22,14 +22,8 @@ public class SearchPropertiesUseCase : IUseCase<SearchPropertiesRequest, IEnumer
     
     public async Task<Result<IEnumerable<PropertyDto>>> ExecuteAsync(SearchPropertiesRequest request)
     {
-        return await ValidateRequest(request)
-            .FlatMapAsync(async _ => await SearchAndMapResults(request));
+        return await SearchAndMapResults(request);
     }
-    
-    private Result<Unit> ValidateRequest(SearchPropertiesRequest request) =>
-        string.IsNullOrEmpty(request.City)
-            ? Result.Failure<Unit>("Ciudad es requerida")
-            : Result.Success(Unit.Value);
             
     private async Task<Result<IEnumerable<PropertyDto>>> SearchAndMapResults(SearchPropertiesRequest request)
     {

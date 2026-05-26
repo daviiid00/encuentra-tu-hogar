@@ -19,7 +19,7 @@ public class IndexModel : PageModel
     public List<PropertyDto> Properties { get; set; } = new();
 
     [BindProperty(SupportsGet = true)]
-    public string? City { get; set; }
+    public string? Neighborhood { get; set; }
 
     [BindProperty(SupportsGet = true)]
     public string? PropertyType { get; set; }
@@ -29,11 +29,12 @@ public class IndexModel : PageModel
 
     public async Task OnGetAsync()
     {
-        var filter = new PropertyFilterRequest(null, null, null, null, null, true, null, null, null);
+        var filter = new PropertyFilterRequest(null, null, null, null, null, null, true, null, null, null);
+        filter = filter with { City = "Medellín" };
 
-        if (!string.IsNullOrEmpty(City))
+        if (!string.IsNullOrEmpty(Neighborhood))
         {
-            filter = filter with { City = City };
+            filter = filter with { Neighborhood = Neighborhood };
         }
 
         if (!string.IsNullOrEmpty(PropertyType))

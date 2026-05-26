@@ -53,8 +53,8 @@ public class AgendarVisitaModel : PageModel
 
         if (!Guid.TryParse(Input.PropertyId, out var propId))
         {
-             // For testing purposes if they just clicked the generic "Agenda una visita" button
-             propId = Guid.NewGuid(); // Fake ID just to show it works
+             ModelState.AddModelError("Input.PropertyId", "El ID de la propiedad no es válido.");
+             return Page();
         }
 
         var request = new ScheduleVisitRequest(propId, Input.ScheduledDate);

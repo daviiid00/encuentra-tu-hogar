@@ -103,6 +103,7 @@ public class ApiClient
         var queryParams = new List<string>();
 
         if (!string.IsNullOrEmpty(filter.City)) queryParams.Add($"city={Uri.EscapeDataString(filter.City)}");
+        if (!string.IsNullOrEmpty(filter.Neighborhood)) queryParams.Add($"neighborhood={Uri.EscapeDataString(filter.Neighborhood)}");
         if (!string.IsNullOrEmpty(filter.Type)) queryParams.Add($"type={Uri.EscapeDataString(filter.Type)}");
         if (!string.IsNullOrEmpty(filter.Transaction)) queryParams.Add($"transaction={Uri.EscapeDataString(filter.Transaction)}");
         if (filter.MinPrice.HasValue) queryParams.Add($"minPrice={filter.MinPrice}");

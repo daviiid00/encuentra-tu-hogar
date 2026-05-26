@@ -46,7 +46,7 @@
                             </div>
                             <span class="nav-user-name">@User.Identity.Name</span>
                         </a>
-                        <form method="post" action="/Logout" style="display:inline;">
+                        <form method="post" asp-page="/Logout" style="display:inline;">
                             <button type="submit" class="btn btn-ghost btn-sm" id="btn-logout">Salir</button>
                         </form>
                     }
@@ -77,7 +77,7 @@
             @if (User.Identity?.IsAuthenticated == true)
             {
                 <a href="/Dashboard">Mi Perfil — @User.Identity.Name</a>
-                <form method="post" action="/Logout">
+                <form method="post" asp-page="/Logout">
                     <button type="submit" class="btn btn-ghost btn-sm btn-full">Cerrar Sesión</button>
                 </form>
             }

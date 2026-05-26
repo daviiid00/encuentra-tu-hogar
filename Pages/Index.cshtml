@@ -27,14 +27,17 @@
         <!-- Search Bar -->
         <form method="get" action="/#propiedades" class="hero-search reveal reveal-delay-2">
             <div class="search-field">
-                <label for="city">Ciudad</label>
-                <select id="city" name="City" asp-for="City">
-                    <option value="">Todas las ciudades</option>
-                    <option value="Medellín">Medellín</option>
-                    <option value="Bogotá">Bogotá</option>
-                    <option value="Cali">Cali</option>
-                    <option value="Envigado">Envigado</option>
-                    <option value="Rionegro">Rionegro</option>
+                <label class="search-label">Barrio / Zona</label>
+                <select asp-for="Neighborhood" class="search-input" id="search-neighborhood">
+                    <option value="">Toda la ciudad</option>
+                    <option value="El Poblado">El Poblado</option>
+                    <option value="Laureles">Laureles</option>
+                    <option value="Belén">Belén</option>
+                    <option value="Estadio">Estadio</option>
+                    <option value="Robledo">Robledo</option>
+                    <option value="Castilla">Castilla</option>
+                    <option value="Aranjuez">Aranjuez</option>
+                    <option value="Buenos Aires">Buenos Aires</option>
                 </select>
             </div>
             <div class="search-field">
@@ -166,7 +169,14 @@
                     string transLabel = TranslationHelper.TranslateTransactionType(prop.Transaction);
                     <div class="property-card reveal @delayClass">
                         <div class="property-img-wrap">
-                            <div class="property-img-placeholder">🏠</div>
+                            @if (prop.ImageUrls != null && prop.ImageUrls.Any())
+                            {
+                                <img src="@prop.ImageUrls.First()" alt="@prop.Title" style="width:100%; height:100%; object-fit:cover;" />
+                            }
+                            else
+                            {
+                                <div class="property-img-placeholder">🏠</div>
+                            }
                             <span class="property-type-badge">@typeLabel</span>
                         </div>
                         <div class="property-body">
@@ -273,7 +283,7 @@
             <div class="testimonial-card reveal reveal-delay-2">
                 <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
                 <p class="testimonial-quote">"Conseguí un departamento en pocos días. Todo fue simple y claro."</p>
-                <p class="testimonial-text">No tuve que pagar comisiones ni hablar con intermediarios. Directo con el propietario, acordamos todo de manera transparente. Muy recomendado.</p>
+                <p class="testimonial-text">No tuve que pagar comisiones extra exageradas ni hablar con intermediarios. Directo con el propietario, acordamos todo de manera transparente. Muy recomendado.</p>
                 <div class="testimonial-author">
                     <div class="t-avatar-fallback">CM</div>
                     <div>

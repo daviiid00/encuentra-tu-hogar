@@ -42,10 +42,10 @@ public class CommunityService : ICommunityService
 
         var createResult = CommunityPost.Create(authorId, request.Title, request.Content, category);
 
-        if (createResult is Result<CommunityPost>.Failure f)
-            return Result.Failure<PostDto>(f.Error);
+        if (createResult is not Result<CommunityPost>.Success postSuccess)
+            return Result.Failure<PostDto>(((Result<CommunityPost>.Failure)createResult).Error);
 
-        var post = ((Result<CommunityPost>.Success)createResult).Value;
+        var post = postSuccess.Value;
         await _repository.AddAsync(post);
 
         var author = await _userManager.FindByIdAsync(authorId);

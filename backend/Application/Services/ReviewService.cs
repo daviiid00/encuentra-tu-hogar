@@ -44,10 +44,10 @@ public class ReviewService : IReviewService
             return Result.Failure<ReviewDto>("Ya existe una reseña para esta visita");
 
         var createResult = Review.Create(request.VisitId, reviewerId, request.Rating, request.Comment);
-        if (createResult is Result<Review>.Failure f)
-            return Result.Failure<ReviewDto>(f.Error);
+        if (createResult is not Result<Review>.Success reviewSuccess)
+            return Result.Failure<ReviewDto>(((Result<Review>.Failure)createResult).Error);
 
-        var review = ((Result<Review>.Success)createResult).Value;
+        var review = reviewSuccess.Value;
         await _reviewRepository.AddAsync(review);
 
         var reviewer = await _userManager.FindByIdAsync(reviewerId);

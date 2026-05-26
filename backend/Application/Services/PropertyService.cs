@@ -96,6 +96,7 @@ public class PropertyService : IPropertyService
         var searchFilter = new SearchFilter
         {
             City = filter.City ?? string.Empty,
+            Neighborhood = filter.Neighborhood ?? string.Empty,
             Type = propType,
             Transaction = txType,
             MinPrice = filter.MinPrice,
@@ -104,7 +105,12 @@ public class PropertyService : IPropertyService
         };
 
         var results = await _repository.FindByFiltersAsync(searchFilter);
-        return results.Select(p => PropertyMapper.ToDto(p));
+        // Solo propiedades verificadas son visibles públicamente
+        return results
+            .Where(p => p.Status == VerificationStatus.Verified)
+            .OrderByDescending(p => p.IsLocalPriority)
+            .ThenByDescending(p => p.Views)
+            .Select(p => PropertyMapper.ToDto(p));
     }
 
     public async Task<Result<PropertyDto>> UpdateAsync(string id, UpdatePropertyRequest request, string requestingUserId)
@@ -116,9 +122,16 @@ public class PropertyService : IPropertyService
         if (property == null)
             return Result.Failure<PropertyDto>("Propiedad no encontrada");
 
-        // Only owner can update (spec: properties.spec.md)
+        // Solo el propietario puede editar (spec: properties.spec.md)
         if (property.OwnerId.Value.ToString() != requestingUserId)
             return Result.Failure<PropertyDto>("No tienes permiso para editar esta propiedad");
+
+        // Aplicar imágenes si se enviaron
+        if (request.ImageUrls != null && request.ImageUrls.Any())
+        {
+            foreach (var url in request.ImageUrls)
+                property.AddImage(url);
+        }
 
         await _repository.UpdateAsync(property);
         return Result.Success(PropertyMapper.ToDto(property));

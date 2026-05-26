@@ -61,24 +61,41 @@ namespace EncuentraTuHogar.Infrastructure.Persistence
                 await userManager.AddToRoleAsync(tenantUser, "Tenant");
             }
 
-            // 3. Properties
-            if (context.Properties.Count() < 8)
+            // 3. Properties (solo Medellín)
+            if (context.Properties.Count() < 9)
             {
-                Property ExtractProperty(Result<Property> result) => ((Result<Property>.Success)result).Value;
+                Property SafeExtract(Result<Property> result)
+                {
+                    if (result is Result<Property>.Success s) return s.Value;
+                    var err = result is Result<Property>.Failure f ? f.Error : "desconocido";
+                    throw new InvalidOperationException($"Error creando propiedad seed: {err}");
+                }
 
-                var p1 = ExtractProperty(Property.Create(new Address("Medellín", "El Poblado", "Cra 43A #1-50", "050022"), PropertyType.Apartment, TransactionType.Rent, new Price(2500000m, "COP"), UserId.From(Guid.Parse(ownerUser.Id)), "Amplio apartamento con excelente vista, ideal para familias. Cuenta con zonas verdes y seguridad 24/7. Hermoso Apartamento en El Poblado"));
-                var p2 = ExtractProperty(Property.Create(new Address("Envigado", "San José", "Calle 38 Sur # 43 - 20", "055422"), PropertyType.House, TransactionType.Rent, new Price(3200000m, "COP"), UserId.From(Guid.Parse(ownerUser.Id)), "Hermosa casa de dos niveles con patio, 3 habitaciones y 2 baños. Casa familiar en Envigado"));
-                var p3 = ExtractProperty(Property.Create(new Address("Medellín", "Laureles", "Circular 4 # 70-12", "050031"), PropertyType.Studio, TransactionType.Rent, new Price(1800000m, "COP"), UserId.From(Guid.Parse(ownerUser.Id)), "Aptoestudio amoblado cerca de universidades, parques y comercio. Estudio moderno Laureles"));
-                var p4 = ExtractProperty(Property.Create(new Address("Rionegro", "Llanogrande", "Vía San Antonio", "054040"), PropertyType.House, TransactionType.Rent, new Price(4500000m, "COP"), UserId.From(Guid.Parse(ownerUser.Id)), "Vive rodeado de naturaleza a solo 40 minutos de la ciudad. 4 habitaciones, chimenea. Casa Campestre en Rionegro"));
-                var p5 = ExtractProperty(Property.Create(new Address("Bogotá", "La Candelaria", "Calle 11 # 4-14", "111711"), PropertyType.Apartment, TransactionType.Rent, new Price(1600000m, "COP"), UserId.From(Guid.Parse(ownerUser.Id)), "Apartamento acogedor de 2 habitaciones, cerca de Transmilenio y zonas culturales. Apartamento centro de Bogotá"));
-                
-                // NEW LOW PRICE PROPERTIES
-                var p6 = ExtractProperty(Property.Create(new Address("Cali", "San Fernando", "Calle 5 # 30-10", "760042"), PropertyType.Apartment, TransactionType.Rent, new Price(1200000m, "COP"), UserId.From(Guid.Parse(ownerUser.Id)), "Lindo apartamento económico, excelente transporte y cerca del estadio. Apartamento económico en Cali"));
-                var p7 = ExtractProperty(Property.Create(new Address("Medellín", "Bello", "Cra 50 # 50-50", "051050"), PropertyType.House, TransactionType.Rent, new Price(1400000m, "COP"), UserId.From(Guid.Parse(ownerUser.Id)), "Casa tradicional, muy amplia, 3 habitaciones, patio grande. Casa tradicional en Bello"));
-                var p8 = ExtractProperty(Property.Create(new Address("Bogotá", "Chapinero", "Cra 7 # 60-15", "110221"), PropertyType.Studio, TransactionType.Rent, new Price(1450000m, "COP"), UserId.From(Guid.Parse(ownerUser.Id)), "Estudio perfecto para estudiantes, excelente ubicación y precio. Estudio en Chapinero"));
-                var p9 = ExtractProperty(Property.Create(new Address("Medellín", "Robledo", "Calle 80 # 80-20", "050034"), PropertyType.Apartment, TransactionType.Rent, new Price(1300000m, "COP"), UserId.From(Guid.Parse(ownerUser.Id)), "Apartamento cerca a universidades, muy económico y bien cuidado. Apartamento en Robledo"));
+                var p1 = SafeExtract(Property.Create(new Address("Medellín", "El Poblado", "Cra 43A #1-50", "050022"), PropertyType.Apartment, TransactionType.Rent, new Price(2500000m, "COP"), UserId.From(Guid.Parse(ownerUser.Id)), "Amplio apartamento con excelente vista al parque, ideal para familias. Cuenta con zonas verdes y seguridad 24/7. Hermoso Apartamento en El Poblado"));
+                var p2 = SafeExtract(Property.Create(new Address("Medellín", "Laureles", "Circular 4 #70-12", "050031"), PropertyType.House, TransactionType.Rent, new Price(3200000m, "COP"), UserId.From(Guid.Parse(ownerUser.Id)), "Hermosa casa de dos niveles con patio interior, 3 habitaciones y 2 baños completos. Casa familiar en Laureles"));
+                var p3 = SafeExtract(Property.Create(new Address("Medellín", "Laureles", "Av. El Poblado #32-15", "050031"), PropertyType.Studio, TransactionType.Rent, new Price(1800000m, "COP"), UserId.From(Guid.Parse(ownerUser.Id)), "Aptoestudio completamente amoblado cerca de universidades, parques y comercio. Estudio moderno en Laureles"));
+                var p4 = SafeExtract(Property.Create(new Address("Medellín", "Belén", "Cra 76 #30-20", "050016"), PropertyType.House, TransactionType.Rent, new Price(2200000m, "COP"), UserId.From(Guid.Parse(ownerUser.Id)), "Casa amplia en barrio tranquilo, ideal para familia numerosa. 4 habitaciones, garaje y patio grande. Casa en Belén"));
+                var p5 = SafeExtract(Property.Create(new Address("Medellín", "Estadio", "Cra 70 #45-08", "050034"), PropertyType.Apartment, TransactionType.Rent, new Price(1600000m, "COP"), UserId.From(Guid.Parse(ownerUser.Id)), "Apartamento cómodo de 2 habitaciones, cerca al estadio Atanasio Girardot y universidades. Excelente transporte"));
+                var p6 = SafeExtract(Property.Create(new Address("Medellín", "Robledo", "Calle 80 #80-20", "050034"), PropertyType.Apartment, TransactionType.Rent, new Price(1300000m, "COP"), UserId.From(Guid.Parse(ownerUser.Id)), "Apartamento económico cerca a universidades, muy bien cuidado con excelente vista. Apartamento en Robledo"));
+                var p7 = SafeExtract(Property.Create(new Address("Medellín", "Castilla", "Cra 65 #90-15", "050010"), PropertyType.House, TransactionType.Rent, new Price(1400000m, "COP"), UserId.From(Guid.Parse(ownerUser.Id)), "Casa tradicional antioqueña, muy amplia, 3 habitaciones, patio grande con jardín. Casa tradicional en Castilla"));
+                var p8 = SafeExtract(Property.Create(new Address("Medellín", "Aranjuez", "Calle 92 #55-30", "050010"), PropertyType.Studio, TransactionType.Rent, new Price(1200000m, "COP"), UserId.From(Guid.Parse(ownerUser.Id)), "Estudio moderno perfecto para estudiantes o profesionales, excelente ubicación y precio justo. Estudio en Aranjuez"));
+                var p9 = SafeExtract(Property.Create(new Address("Medellín", "Buenos Aires", "Cra 33 #22-15", "050013"), PropertyType.Apartment, TransactionType.Rent, new Price(1750000m, "COP"), UserId.From(Guid.Parse(ownerUser.Id)), "Apartamento luminoso con vista privilegiada a la ciudad desde las laderas de Buenos Aires. Apartamento en Buenos Aires"));
+
+                p1.AddImage("/images/properties/apt1.png");
+                p2.AddImage("/images/properties/house1.png");
+                p3.AddImage("/images/properties/studio1.png");
+                p4.AddImage("/images/properties/house1.png");
+                p5.AddImage("/images/properties/apt1.png");
+                p6.AddImage("/images/properties/apt1.png");
+                p7.AddImage("/images/properties/house1.png");
+                p8.AddImage("/images/properties/studio1.png");
+                p9.AddImage("/images/properties/apt1.png");
 
                 var properties = new[] { p1, p2, p3, p4, p5, p6, p7, p8, p9 };
+
+                // Verificar todas las propiedades para que aparezcan en búsquedas públicas
+                foreach (var prop in properties)
+                    prop.MarkAsVerified();
 
                 context.Properties.AddRange(properties);
                 await context.SaveChangesAsync();

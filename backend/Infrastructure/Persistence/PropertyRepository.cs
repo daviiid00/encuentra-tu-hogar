@@ -21,6 +21,9 @@ public class PropertyRepository : IPropertyRepository
         if (!string.IsNullOrEmpty(filter.City))
             query = query.Where(p => EF.Functions.Like(p.Address.City, $"%{filter.City}%"));
 
+        if (!string.IsNullOrEmpty(filter.Neighborhood))
+            query = query.Where(p => EF.Functions.Like(p.Address.Zone, $"%{filter.Neighborhood}%"));
+
         if (filter.Type.HasValue)
             query = query.Where(p => p.Type == filter.Type.Value);
 

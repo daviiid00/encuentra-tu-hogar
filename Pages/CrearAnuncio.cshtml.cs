@@ -64,9 +64,9 @@ public class CrearAnuncioModel : PageModel
             return Page();
 
         var request = new CreatePropertyRequest(
-            $"Propiedad en {Input.City}",
+            $"Propiedad en Medellín",
             Input.Description,
-            Input.City,
+            "Medellín",
             Input.Zone,
             Input.Street,
             "00000",

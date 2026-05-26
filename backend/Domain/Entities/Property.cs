@@ -8,6 +8,7 @@ namespace EncuentraTuHogar.Domain.Entities;
 public class SearchFilter
 {
     public string City { get; set; } = string.Empty;
+    public string Neighborhood { get; set; } = string.Empty;
     public PropertyType? Type { get; set; }
     public TransactionType? Transaction { get; set; }
     public decimal? MinPrice { get; set; }

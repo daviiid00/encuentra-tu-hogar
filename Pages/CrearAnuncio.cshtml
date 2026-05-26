@@ -73,16 +73,26 @@
                         <label asp-for="Input.City" class="form-label">Ciudad</label>
                         <input asp-for="Input.City"
                                class="form-control"
-                               placeholder="Ej: Medellín"
+                               value="Medellín"
+                               readonly
                                id="input-city" />
-                        <span asp-validation-for="Input.City" class="form-error"></span>
+                        <span class="form-hint">Solo disponible en Medellín</span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Input.Zone" class="form-label">Barrio / Zona</label>
-                        <input asp-for="Input.Zone"
-                               class="form-control"
-                               placeholder="Ej: Laureles"
-                               id="input-zone" />
+                        <select asp-for="Input.Zone"
+                                class="form-control"
+                                id="input-zone">
+                            <option value="">Seleccione barrio...</option>
+                            <option value="El Poblado">El Poblado</option>
+                            <option value="Laureles">Laureles</option>
+                            <option value="Belén">Belén</option>
+                            <option value="Estadio">Estadio</option>
+                            <option value="Robledo">Robledo</option>
+                            <option value="Castilla">Castilla</option>
+                            <option value="Aranjuez">Aranjuez</option>
+                            <option value="Buenos Aires">Buenos Aires</option>
+                        </select>
                         <span asp-validation-for="Input.Zone" class="form-error"></span>
                     </div>
                 </div>

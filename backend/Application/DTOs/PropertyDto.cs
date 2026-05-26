@@ -79,6 +79,7 @@ public record UpdatePropertyRequest(
 
 public record PropertyFilterRequest(
     string? City,
+    string? Neighborhood,
     string? Type,
     string? Transaction,
     decimal? MinPrice,
