@@ -50,7 +50,7 @@ public class Property : Entity
                 Transaction = transaction,
                 Price = price,
                 OwnerId = ownerId,
-                Status = VerificationStatus.Pending,
+                Status = VerificationStatus.Verified,
                 Description = description,
                 CreatedAt = DateTime.UtcNow,
                 Views = 0,
