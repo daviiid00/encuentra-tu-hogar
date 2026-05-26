@@ -80,6 +80,7 @@
                     <input asp-for="Input.ScheduledDate"
                            class="form-control"
                            type="datetime-local"
+                           step="60"
                            id="input-scheduled-date" />
                     <span class="form-hint">Las visitas suelen ser entre semana de 9am a 6pm o fines de semana.</span>
                     <span asp-validation-for="Input.ScheduledDate" class="form-error"></span>
